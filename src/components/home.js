@@ -1,5 +1,10 @@
 import React from 'react';
-import AppNavBar from './app_bar';
+import AppNavBar from '../utils/app_bar';
 export default function HomePage(){
-    return <AppNavBar/>
+    return (
+        <>
+            <AppNavBar/>
+            <div>Home</div>
+        </>
+    )
 }
