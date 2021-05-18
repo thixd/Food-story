@@ -16,7 +16,7 @@ firebase.database().ref(uid +'/origins').set([
     {value:"Italian", label:"Italian"}
 ])
 
-firebase.database.ref(uid+'feeds')
+firebase.database().ref(uid+'feeds')
 
 function FBSelect(arg) {
     const loadOptions = () => {
