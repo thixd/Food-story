@@ -2,6 +2,9 @@ import React, {useState, useEffect} from 'react'
 import AppNavBar from '../../utils/app_bar'
 import firebase from '../../firebase'
 import AsyncSelect from "react-select/async"
+import './food_diary.css'
+import Grid from "@material-ui/core/Grid"
+import ButtonBase from "@material-ui/core/ButtonBase"
 //import UID
 
 //Sample variables for test
@@ -48,15 +51,12 @@ class Renderer extends React.Component{
     }
 
     render(){
-        if (this.state.urls===[]) return <div></div>
+        if (this.state.urls===[]) return Upload_file()
         console.log("Asdf")
 
-        return <div>
-            {this.state.urls.map(map => (
-                <img src={map[0]} key={map[1]} style={{width:"100px", height:"100px"}}/>
-            ))}
-            </div>
-        
+        return this.state.urls.map(map => (
+                <img src={map[0]} key={map[1]} class="diary_image"/>
+            ))      
     }
 }
 
@@ -83,9 +83,10 @@ function Upload_file(){
     const upload = (e) => {
         setfile(tmp => e.target.files[0])
     }
-    return <div>
-        <input type="file" onChange={upload}/>
-    </div>
+    return <ButtonBase class="diary_image">
+    <input type="file" onChange={upload} accept="image/*" id="upload_btn" style={{opacity:"0%"}}/>
+    </ButtonBase>      
+
 }
 
 export default function DiaryMain(){
@@ -93,19 +94,25 @@ export default function DiaryMain(){
     const [uid, setuid] = useState("sample_uid")
 
     return (
-        <>
-            <AppNavBar/>
-            <div>
+        <Grid container spacing={2}>
+            <Grid item lg={12}>
+                <AppNavBar/>
+            </Grid>
+            <Grid item lg={1}>
                 <div>Filter by</div>
+            </Grid>
+            <Grid item lg={2}>
                 <div style={{width: '300px'}}>{FBSelect(uid +'/locations')}</div>
+            </Grid>
+            <Grid item lg={2}>
                 <div style={{width: '300px'}}>{FBSelect(uid +'/origins')}</div>
-            </div>
-            <div id="diary_box" style={{width:"500px", height:"500px", border:"1px solid black"}}>
-                <Renderer/>
-            </div>
-
-            {Upload_file()}
-            <div> This is diary main </div>
-        </>
+            </Grid>
+            <Grid item lg={12}>
+                <div id="diary_box">
+                    {Upload_file()}
+                    <Renderer/>
+                </div>
+            </Grid>
+        </Grid>
     )
 }
