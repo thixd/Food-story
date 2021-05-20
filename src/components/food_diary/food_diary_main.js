@@ -4,7 +4,8 @@ import firebase from '../../firebase'
 import AsyncSelect from "react-select/async"
 import './food_diary.css'
 import Grid from "@material-ui/core/Grid"
-import ButtonBase from "@material-ui/core/ButtonBase"
+import IconButton from "@material-ui/core/IconButton"
+import AddAPhotoIcon from "@material-ui/icons/AddAPhoto"
 //import UID
 
 //Sample variables for test
@@ -55,7 +56,9 @@ class Renderer extends React.Component{
         console.log("Asdf")
 
         return this.state.urls.map(map => (
-                <img src={map[0]} key={map[1]} class="diary_image"/>
+                <Grid item lg={2}>
+                    <img src={map[0]} key={map[1]} class="diary_image"/>
+                </Grid>
             ))      
     }
 }
@@ -83,10 +86,15 @@ function Upload_file(){
     const upload = (e) => {
         setfile(tmp => e.target.files[0])
     }
-    return <ButtonBase class="diary_image">
-    <input type="file" onChange={upload} accept="image/*" id="upload_btn" style={{opacity:"0%"}}/>
-    </ButtonBase>      
-
+    return <div>
+        <input type="file" onChange={upload} accept="image/*" id="upload_btn" style={{display:"none"}}/>
+        <label htmlFor="upload_btn" style={{marginLeft:"25%"}}>
+            <IconButton aria-label="addaphoto" component="span">
+                <AddAPhotoIcon style={{fontSize:"50"}}/>
+            </IconButton>  
+        </label>
+    </div>
+    
 }
 
 export default function DiaryMain(){
@@ -94,25 +102,28 @@ export default function DiaryMain(){
     const [uid, setuid] = useState("sample_uid")
 
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} style={{flexGrow:1}}>
             <Grid item lg={12}>
                 <AppNavBar/>
             </Grid>
+            <Grid item lg={7}></Grid>
             <Grid item lg={1}>
-                <div>Filter by</div>
+                <div style={{float:"right"}}>Filter by</div>
             </Grid>
             <Grid item lg={2}>
-                <div style={{width: '300px'}}>{FBSelect(uid +'/locations')}</div>
+                <div>{FBSelect(uid +'/locations')}</div>
             </Grid>
-            <Grid item lg={2}>
-                <div style={{width: '300px'}}>{FBSelect(uid +'/origins')}</div>
+            <Grid item lg={2} >
+                <div>{FBSelect(uid +'/origins')}</div>
             </Grid>
-            <Grid item lg={12}>
-                <div id="diary_box">
+
+            <Grid container item lg={8} spacing={2} id="diary_box">
+                <Grid item lg={2}>
                     {Upload_file()}
-                    <Renderer/>
-                </div>
+                </Grid>
+                <Renderer/>
             </Grid>
+
         </Grid>
     )
 }
