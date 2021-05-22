@@ -3,7 +3,6 @@ import AppNavBar from '../../utils/app_bar'
 import firebase from '../../firebase'
 import AsyncSelect from "react-select/async"
 import './food_diary.css'
-import Grid from "@material-ui/core/Grid"
 import IconButton from "@material-ui/core/IconButton"
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto"
 //import UID
@@ -56,9 +55,7 @@ class Renderer extends React.Component{
         console.log("Asdf")
 
         return this.state.urls.map(map => (
-                <Grid item lg={2}>
-                    <img src={map[0]} key={map[1]} class="diary_image"/>
-                </Grid>
+                <img src={map[0]} key={map[1]} className="diary_image"/>
             ))      
     }
 }
@@ -86,7 +83,7 @@ function Upload_file(){
     const upload = (e) => {
         setfile(tmp => e.target.files[0])
     }
-    return <div>
+    return <div style={{gridRow:1/1, gridColumn:1/1}}>
         <input type="file" onChange={upload} accept="image/*" id="upload_btn" style={{display:"none"}}/>
         <label htmlFor="upload_btn" style={{marginLeft:"25%"}}>
             <IconButton aria-label="addaphoto" component="span">
@@ -102,28 +99,18 @@ export default function DiaryMain(){
     const [uid, setuid] = useState("sample_uid")
 
     return (
-        <Grid container spacing={2} style={{flexGrow:1}}>
-            <Grid item lg={12}>
-                <AppNavBar/>
-            </Grid>
-            <Grid item lg={7}></Grid>
-            <Grid item lg={1}>
-                <div style={{float:"right"}}>Filter by</div>
-            </Grid>
-            <Grid item lg={2}>
-                <div>{FBSelect(uid +'/locations')}</div>
-            </Grid>
-            <Grid item lg={2} >
-                <div>{FBSelect(uid +'/origins')}</div>
-            </Grid>
-
-            <Grid container item lg={8} spacing={2} id="diary_box">
-                <Grid item lg={2}>
+        <div>
+            <AppNavBar/>
+            <div style={{float:"right"}}>Filter by</div>
+            <div>{FBSelect(uid +'/locations')}</div>
+            <div>{FBSelect(uid +'/origins')}</div>
+            <div className="container">
+                <div id="diary_grid">
                     {Upload_file()}
-                </Grid>
-                <Renderer/>
-            </Grid>
+                    <Renderer/>
+                </div>
 
-        </Grid>
+            </div>
+        </div>
     )
 }
