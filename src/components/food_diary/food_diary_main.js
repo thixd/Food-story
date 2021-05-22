@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, createContext} from 'react'
 import AppNavBar from '../../utils/app_bar'
 import firebase from '../../firebase'
 import AsyncSelect from "react-select/async"
@@ -22,44 +22,44 @@ firebase.database().ref(uid +'/origins').set([
 firebase.storage().ref().child(uid)
 firebase.storage().ref(uid).child('images')
 
-function FBSelect(arg) {
+
+const SelectionContext = createContext(null)
+
+function FBSelect(arg, setter) {
     const loadOptions = () => {
-        return firebase.database().ref(arg).once('value').then((snapshot => {
+        return firebase.database().ref(uid+arg).once('value').then((snapshot => {
             return snapshot.val()
         }))
     }
-    return <AsyncSelect defaultOptions loadOptions={loadOptions}></AsyncSelect>
+    function handleChange(e){
+        setter(e["value"])
+    }
+    return <AsyncSelect id={'select'+arg} defaultOptions loadOptions={loadOptions} onChange={handleChange}></AsyncSelect>
 }
 
 
+function Renderer(Selection){
+    const [urls, seturls] = useState([])
+    console.log(Selection)
 
-class Renderer extends React.Component{
-    constructor(props){
-        super(props)
-        this.state = {
-            urls:[]
-        }
-    }
-
-    componentDidMount(){
-        firebase.database().ref(uid+"/feeds/").get().then((snapshot) =>{
-            const maps = Object.keys(snapshot.val()).map((key) =>{
-                return [snapshot.val()[key]['image'], key]
+    useEffect(() => {
+        firebase.database().ref(uid).get().then((snapshot) =>{
+            const maps = Object.keys(snapshot.val()['feeds']).map((key) =>{
+                return [snapshot.val()['feeds'][key]['image'], key]
             })
-            this.setState({urls:maps})
+            seturls(maps)
         })
-    }
+    }, [])
 
-    render(){
-        if (this.state.urls===[]) return Upload_file()
-        console.log("Asdf")
+    useEffect(() => {
+        alert(Selection)
+    }, [Selection])
 
-        return this.state.urls.map(map => (
-                <img src={map[0]} key={map[1]} className="diary_image"/>
-            ))      
-    }
+    if (urls===[]) return null
+    return urls.map(map => (
+            <img src={map[0]} key={map[1]} className="diary_image"/>
+        ))  
 }
-
 
 
 //Upload file
@@ -78,8 +78,6 @@ function Upload_file(){
                 firebase.database().ref(uid+'/feeds/'+feedkey+"/image").set(value)
             })
         })
-
-        
     }, [file])
     const upload = (e) => {
         setfile(tmp => e.target.files[0])
@@ -100,30 +98,37 @@ document.addEventListener('click', (e) => {
     if (e.target.className === "diary_image"){
         alert("clicked!")
     }
+    else if (e.target.id === "select_locations"){
+
+    }
+    else if (e.target.id === "select_origins"){
+
+    }
 })
 
 export default function DiaryMain(){
 
     const [uid, setuid] = useState("sample_uid")
-
+    const [Selection, setSelection] = useState(null)
     return (
-        <div>
-            <AppNavBar/>
-            <div style={{display:"grid", gridTemplateColumns:"7fr 1fr 2fr 2fr"}}>
-                <div></div>
-                <div style={{textAlign:'right', paddingTop:"7px"}}>Filter by: </div>
-                <div>{FBSelect(uid +'/locations')}</div>
-                <div>{FBSelect(uid +'/origins')}</div>
-            </div>
-
-            <div className="container">
-                <div id="diary_grid">
-                    {Upload_file()}
-                    <Renderer/>
+        <SelectionContext.Provider value={{Selection, setSelection}}>
+            <div>
+                <AppNavBar/>
+                <div style={{display:"grid", gridTemplateColumns:"7fr 1fr 2fr 2fr"}}>
+                    <div></div>
+                    <div style={{textAlign:'right', paddingTop:"7px"}}>Filter by: </div>
+                    <div>{FBSelect('/locations',setSelection)}</div>
+                    <div>{FBSelect('/origins', setSelection)}</div>
                 </div>
 
-            </div>
-        </div>
+                <div className="container">
+                    <div id="diary_grid">
+                        {Upload_file(Selection)}
+                        {Renderer(Selection)}
+                    </div>
 
+                </div>
+            </div>
+        </SelectionContext.Provider>
     )
 }
