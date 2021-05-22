@@ -10,8 +10,8 @@ import AddAPhotoIcon from "@material-ui/icons/AddAPhoto"
 //Sample variables for test
 const uid = "sample_uid"
 firebase.database().ref(uid +'/locations').set([
-    {value:"value", label:"label"},
-    {value:"asdf", label:"asdf"}
+    {value:"Dajeon", label:"Dajeon"},
+    {value:"Seoul", label:"Seoul"}
 ])
 
 firebase.database().ref(uid +'/origins').set([
@@ -67,13 +67,14 @@ function Upload_file(){
     const [file, setfile] = useState(null)
     useEffect(() => {
         if (file==null) return
-        const feedkey_list = String(firebase.database().ref(uid+'/feeds/').push()).split('/')
+        const feedkey_list = String(firebase.database().ref('/feeds/').push()).split('/')
         const feedkey = feedkey_list[feedkey_list.length -1]
         const imgref = firebase.storage().ref().child(uid).child('images').child(feedkey)
         imgref.put(file).then(() => {
             alert("file uploaded")
         }).then(() => {
             firebase.storage().ref().child(uid).child('images').child(feedkey).getDownloadURL().then((value) =>{
+                firebase.database().ref('/feeds/'+feedkey+'image').set(value)
                 firebase.database().ref(uid+'/feeds/'+feedkey+"/image").set(value)
             })
         })
@@ -85,7 +86,7 @@ function Upload_file(){
     }
     return <div style={{gridRow:1/1, gridColumn:1/1}}>
         <input type="file" onChange={upload} accept="image/*" id="upload_btn" style={{display:"none"}}/>
-        <label htmlFor="upload_btn" style={{marginLeft:"25%"}}>
+        <label htmlFor="upload_btn" style={{marginLeft:"20%"}}>
             <IconButton aria-label="addaphoto" component="span">
                 <AddAPhotoIcon style={{fontSize:"50"}}/>
             </IconButton>  
@@ -94,6 +95,13 @@ function Upload_file(){
     
 }
 
+
+document.addEventListener('click', (e) => {
+    if (e.target.className === "diary_image"){
+        alert("clicked!")
+    }
+})
+
 export default function DiaryMain(){
 
     const [uid, setuid] = useState("sample_uid")
@@ -101,9 +109,13 @@ export default function DiaryMain(){
     return (
         <div>
             <AppNavBar/>
-            <div style={{float:"right"}}>Filter by</div>
-            <div>{FBSelect(uid +'/locations')}</div>
-            <div>{FBSelect(uid +'/origins')}</div>
+            <div style={{display:"grid", gridTemplateColumns:"7fr 1fr 2fr 2fr"}}>
+                <div></div>
+                <div style={{textAlign:'right', paddingTop:"7px"}}>Filter by: </div>
+                <div>{FBSelect(uid +'/locations')}</div>
+                <div>{FBSelect(uid +'/origins')}</div>
+            </div>
+
             <div className="container">
                 <div id="diary_grid">
                     {Upload_file()}
@@ -112,5 +124,6 @@ export default function DiaryMain(){
 
             </div>
         </div>
+
     )
 }
