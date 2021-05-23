@@ -10,15 +10,11 @@ import CloseIcon from '@material-ui/icons/Close'
 
 //Sample variables for test
 const uid = "sample_uid"
-firebase.database().ref(uid +'/locations').set([
-    {value:"Dajeon", label:"Dajeon"},
-    {value:"Seoul", label:"Seoul"}
-])
+firebase.database().ref(uid +'/locations/Dajeon/-Ma49Ikizf3-0Km6ouME').set("https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/sample_uid%2Fimages%2F-Ma49Ikizf3-0Km6ouME?alt=media&token=55d3c26a-37ee-4de3-bab2-799d59a164e5")
 
-firebase.database().ref(uid +'/origins').set([
-    {value:"Korean", label:"Korean"},
-    {value:"Italian", label:"Italian"}
-])
+firebase.database().ref(uid +'/origins/Korean/-Ma49Ikizf3-0Km6ouME').set("https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/sample_uid%2Fimages%2F-Ma49Ikizf3-0Km6ouME?alt=media&token=55d3c26a-37ee-4de3-bab2-799d59a164e5")
+
+
 
 firebase.storage().ref().child(uid)
 firebase.storage().ref(uid).child('images')
@@ -26,22 +22,37 @@ firebase.storage().ref(uid).child('images')
 
 const SelectionContext = createContext(null)
 
-function FBSelect(arg, setter) {
+function LocSelect(setter){
     const loadOptions = () => {
-        return firebase.database().ref(uid+arg).once('value').then((snapshot => {
-            return snapshot.val()
+        return firebase.database().ref(uid+'/locations').once('value').then((snapshot => {
+            return Object.keys(snapshot.val()).map(map =>{
+                return {value:map, label:map}
+            })
         }))
     }
     function handleChange(e){
         setter(e["value"])
     }
-    return <AsyncSelect id={'select'+arg} defaultOptions loadOptions={loadOptions} onChange={handleChange}></AsyncSelect>
+    return <AsyncSelect id={'select_location'} defaultOptions loadOptions={loadOptions} onChange={handleChange} defaultInputValue="Location"></AsyncSelect>
+}
+
+function OrgSelect(setter){
+    const loadOptions = () => {
+        return firebase.database().ref(uid+'/origins').once('value').then((snapshot => {
+            return Object.keys(snapshot.val()).map(map =>{
+                return {value:map, label:map}
+            })
+        }))
+    }
+    function handleChange(e){
+        setter(e["value"])
+    }
+    return <AsyncSelect id={'select_origin'} defaultOptions loadOptions={loadOptions} onChange={handleChange} defaultInputValue="Origin"></AsyncSelect>
 }
 
 
-function Renderer(Selection, setselectedImage){
+function Renderer(loc, org, setselectedImage){
     const [urls, seturls] = useState([])
-    console.log(Selection)
 
     useEffect(() => {
         firebase.database().ref(uid).get().then((snapshot) =>{
@@ -53,8 +64,32 @@ function Renderer(Selection, setselectedImage){
     }, [])
 
     useEffect(() => {
-        alert(Selection)
-    }, [Selection])
+        console.log(loc)
+        console.log(org)
+        if (loc!=null){
+            firebase.database().ref(uid).child('locations').child(loc).get().then((snapshot) =>{
+                const maps = Object.keys(snapshot.val()).map((key) => {
+                    return [snapshot.val()[key], key]
+                })
+                seturls(maps)
+            })
+        }
+        if (org!=null){
+            firebase.database().ref(uid).child('origins').child(org).get().then((snapshot) =>{
+                const maps = Object.keys(snapshot.val()).map((key) => {
+                    return [snapshot.val()[key], key]
+                })
+                var tmp = urls.slice()
+                var res = []
+                for (var i=0; i<maps.length;i++){
+                    for (var j=0; j<tmp.length; j++){
+                        if (maps[i][0]===tmp[j][0]) res.push(maps[i])
+                    }
+                }
+                seturls(res)
+            })
+        }
+    }, [loc, org])
 
     function imageClick(e){
         setselectedImage(e["target"])
@@ -133,39 +168,38 @@ function Upload_file(){
 }
 
 document.addEventListener('click', (e) => {
-
-    if (e.target.className === "diary_image"){
+    if (document.getElementById("diary_overlay").style.display === "grid" &&
+        !document.getElementById("diary_overlay").contains(e.target)){
+        document.getElementById("diary_overlay").style.display = "none"
+    }
+    else if (e.target.className === "diary_image"){
         document.getElementById("diary_overlay").style.display = "grid"
         document.addEventListener('click', (e))
     }
-    else if (document.getElementById("diary_overlay").style.display === "grid" &&
-        !document.getElementById("diary_overlay").contains(e.target)){
-        document.getElementById("diary_overlay").style.display = "none"
-
-    }
-
 })
 
 export default function DiaryMain(){
 
     const [uid, setuid] = useState("sample_uid")
-    const [Selection, setSelection] = useState(null)
+    const [loc, setloc] = useState(null)
+    const [org, setorg] = useState(null)
     const [selectedImage, setselectedImage] = useState(null)
     return (
-        <SelectionContext.Provider value={{Selection, setSelection, selectedImage, setselectedImage}}>
+        <SelectionContext.Provider value={{loc, setloc, org, setorg, selectedImage, setselectedImage}}>
             <div>
                 <AppNavBar/>
-                <div style={{display:"grid", gridTemplateColumns:"7fr 1fr 2fr 2fr", paddingTop:"10px"}}>
+                <div style={{display:"grid", gridTemplateColumns:"5fr 2fr 1fr 2fr 2fr", paddingTop:"10px"}}>
                     <div></div>
+                    <div style={{textAlign:"center", fontSize:"40px"}}>May</div>
                     <div style={{textAlign:'right', paddingTop:"7px"}}>Filter by: </div>
-                    <div>{FBSelect('/locations',setSelection)}</div>
-                    <div>{FBSelect('/origins', setSelection)}</div>
+                    <div>{LocSelect(setloc)}</div>
+                    <div>{OrgSelect(setorg)}</div>
                 </div>
 
                 <div className="container">
                     <div id="diary_grid">
-                        {Upload_file(Selection)}
-                        {Renderer(Selection, setselectedImage)}
+                        {Upload_file()}
+                        {Renderer(loc, org, setselectedImage)}
                     </div>
                 </div>
                 {DiaryOverlay(selectedImage)}
