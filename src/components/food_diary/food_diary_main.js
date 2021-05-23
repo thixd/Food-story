@@ -1,10 +1,11 @@
-import React, {useState, useEffect, createContext} from 'react'
+import React, {useState, useEffect, createContext, useRef} from 'react'
 import AppNavBar from '../../utils/app_bar'
 import firebase from '../../firebase'
 import AsyncSelect from "react-select/async"
 import './food_diary.css'
 import IconButton from "@material-ui/core/IconButton"
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto"
+import CloseIcon from '@material-ui/icons/Close'
 //import UID
 
 //Sample variables for test
@@ -62,21 +63,40 @@ function Renderer(Selection, setselectedImage){
     if (urls===[]) return null
     return urls.map(map => (
         <div>
-            <img src={map[0]} key={map[1]} className="diary_image" onClick={imageClick}/>
+            <img src={map[0]} id={map[1]} className="diary_image" onClick={imageClick}/>
         </div>
         ))  
 }
 
 function DiaryOverlay(selectedImage){
+    const overlayref = useRef(null)
+
     useEffect(() => {
         if (selectedImage===null) return null
-        document.getElementById('diary_overlay').textContent =selectedImage.src
+        firebase.database().ref('/Feeds/'+selectedImage.id).get().then((snapshot) =>{
+            document.querySelector('#overlay_image').src = selectedImage.src 
+            document.querySelector('#overlay_location').textContent = snapshot.val()['location']
+            document.querySelector('#overlay_origin').textContent = snapshot.val()['origin']
+
+        })
     }, [selectedImage])
 
-
-
+    
+    function close(){
+        document.getElementById("diary_overlay").style.display = "none"
+    }
     return (
-        <div id="diary_overlay" style={{display:"none"}}></div>
+        <div id="diary_overlay" style={{display:"none"}} ref={overlayref}>
+            <IconButton id="overlay_close" component="span" onClick={close}>
+                <CloseIcon style={{fontSize:"50"}}/>
+            </IconButton>
+            <img id="overlay_image"></img>
+
+            <div>Location</div>
+            <div id="overlay_location"></div>
+            <div>Origin</div>
+            <div id="overlay_origin"></div>
+        </div>
     )
 }
 
@@ -103,7 +123,7 @@ function Upload_file(){
     }
     return <div style={{gridRow:1/1, gridColumn:1/1}}>
         <input type="file" onChange={upload} accept="image/*" id="upload_btn" style={{display:"none"}}/>
-        <label htmlFor="upload_btn" style={{marginLeft:"20%"}}>
+        <label htmlFor="upload_btn">
             <IconButton aria-label="addaphoto" component="span">
                 <AddAPhotoIcon style={{fontSize:"50"}}/>
             </IconButton>  
@@ -112,15 +132,16 @@ function Upload_file(){
     
 }
 
-var overlay_actived = 0
 document.addEventListener('click', (e) => {
-    if (overlay_actived && e.target.id !== "diary_overlay"){
-        document.getElementById("diary_overlay").style.display = "none"
-        overlay_actived = 0
+
+    if (e.target.className === "diary_image"){
+        document.getElementById("diary_overlay").style.display = "grid"
+        document.addEventListener('click', (e))
     }
-    else if (e.target.className === "diary_image"){
-        document.getElementById("diary_overlay").style.display = "block"
-        overlay_actived = 1
+    else if (document.getElementById("diary_overlay").style.display === "grid" &&
+        !document.getElementById("diary_overlay").contains(e.target)){
+        document.getElementById("diary_overlay").style.display = "none"
+
     }
 
 })
