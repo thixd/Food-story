@@ -38,7 +38,7 @@ function FBSelect(arg, setter) {
 }
 
 
-function Renderer(Selection){
+function Renderer(Selection, setselectedImage){
     const [urls, seturls] = useState([])
     console.log(Selection)
 
@@ -55,10 +55,29 @@ function Renderer(Selection){
         alert(Selection)
     }, [Selection])
 
+    function imageClick(e){
+        setselectedImage(e["target"])
+    }
+
     if (urls===[]) return null
     return urls.map(map => (
-            <img src={map[0]} key={map[1]} className="diary_image"/>
+        <div>
+            <img src={map[0]} key={map[1]} className="diary_image" onClick={imageClick}/>
+        </div>
         ))  
+}
+
+function DiaryOverlay(selectedImage){
+    useEffect(() => {
+        if (selectedImage===null) return null
+        document.getElementById('diary_overlay').textContent =selectedImage.src
+    }, [selectedImage])
+
+
+
+    return (
+        <div id="diary_overlay" style={{display:"none"}}></div>
+    )
 }
 
 
@@ -93,28 +112,29 @@ function Upload_file(){
     
 }
 
-
+var overlay_actived = 0
 document.addEventListener('click', (e) => {
-    if (e.target.className === "diary_image"){
-        alert("clicked!")
+    if (overlay_actived && e.target.id !== "diary_overlay"){
+        document.getElementById("diary_overlay").style.display = "none"
+        overlay_actived = 0
     }
-    else if (e.target.id === "select_locations"){
+    else if (e.target.className === "diary_image"){
+        document.getElementById("diary_overlay").style.display = "block"
+        overlay_actived = 1
+    }
 
-    }
-    else if (e.target.id === "select_origins"){
-
-    }
 })
 
 export default function DiaryMain(){
 
     const [uid, setuid] = useState("sample_uid")
     const [Selection, setSelection] = useState(null)
+    const [selectedImage, setselectedImage] = useState(null)
     return (
-        <SelectionContext.Provider value={{Selection, setSelection}}>
+        <SelectionContext.Provider value={{Selection, setSelection, selectedImage, setselectedImage}}>
             <div>
                 <AppNavBar/>
-                <div style={{display:"grid", gridTemplateColumns:"7fr 1fr 2fr 2fr"}}>
+                <div style={{display:"grid", gridTemplateColumns:"7fr 1fr 2fr 2fr", paddingTop:"10px"}}>
                     <div></div>
                     <div style={{textAlign:'right', paddingTop:"7px"}}>Filter by: </div>
                     <div>{FBSelect('/locations',setSelection)}</div>
@@ -124,10 +144,10 @@ export default function DiaryMain(){
                 <div className="container">
                     <div id="diary_grid">
                         {Upload_file(Selection)}
-                        {Renderer(Selection)}
+                        {Renderer(Selection, setselectedImage)}
                     </div>
-
                 </div>
+                {DiaryOverlay(selectedImage)}
             </div>
         </SelectionContext.Provider>
     )
