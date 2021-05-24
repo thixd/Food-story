@@ -2,13 +2,17 @@ import React, {useState, useEffect, createContext, useRef} from 'react'
 import AppNavBar from '../../utils/app_bar'
 import firebase from '../../firebase'
 import AsyncSelect from "react-select/async"
+import mapboxgl from 'mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
 import './food_diary.css'
 import IconButton from "@material-ui/core/IconButton"
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto"
-import CloseIcon from '@material-ui/icons/Close'
+import ShareIcon from '@material-ui/icons/Share'
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 //import UID
+
+mapboxgl.accessToken = "pk.eyJ1Ijoic3Rhcm1wY2MiLCJhIjoiY2tvM25tN3prMDhkZTJvbm1ndGdpZ29wdiJ9.UNImIqbOG-IOXPZgqM5GwQ"
 
 //Sample variables for test
 const uid = "sample_uid"
@@ -119,7 +123,7 @@ function Renderer(loc, org, setselectedImage){
     return urls.map(map => {
         if (map!=null){
             return (<div>
-                    <img src={map[0]} id={map[1]} className="diary_image" onClick={imageClick}/>
+                    <img src={map[0]} id={map[1]} className="diary_image" alt="" onClick={imageClick}/>
                 </div>
             )
         }
@@ -129,8 +133,29 @@ function Renderer(loc, org, setselectedImage){
     }) 
 }
 
+
+
 function DiaryOverlay(selectedImage){
+    const [lng, setlng] = useState(127.36252)
+    const [lat, setlat] = useState(36.37036)
+    const [zoom, setzoom] = useState(12)
     const overlayref = useRef(null)
+    const mapRef = useRef(null)
+    const map = useRef(null)
+
+
+    useEffect(() => {
+        if (map.current) return
+        map.current = new mapboxgl.Map({
+            container: mapRef.current,
+            style: "mapbox://styles/mapbox/streets-v11",
+            center: [lng, lat],
+            zoom: zoom
+        })
+    }, [])
+
+
+
 
     useEffect(() => {
         if (selectedImage===null) return null
@@ -138,25 +163,27 @@ function DiaryOverlay(selectedImage){
             document.querySelector('#overlay_image').src = selectedImage.src 
             document.querySelector('#overlay_location').textContent = snapshot.val()['location']
             document.querySelector('#overlay_origin').textContent = snapshot.val()['origin']
+            map.current.setCenter([snapshot.val()['lng'], snapshot.val()['lat']])
 
         })
     }, [selectedImage])
 
-    
-    function close(){
-        document.getElementById("diary_overlay").style.display = "none"
+    function share(){
+        //do_something
     }
     return (
         <div id="diary_overlay" style={{display:"none"}} ref={overlayref}>
-            <IconButton id="overlay_close" component="span" onClick={close}>
-                <CloseIcon style={{fontSize:"50"}}/>
+            <IconButton id="overlay_share" component="span" onClick={share}>
+                <ShareIcon style={{fontSize:"30"}}/>
             </IconButton>
-            <img id="overlay_image"></img>
+            <img id="overlay_image" alt=""></img>
 
-            <div>Location</div>
-            <div id="overlay_location"></div>
-            <div>Origin</div>
-            <div id="overlay_origin"></div>
+            <div style={{paddingLeft:"50px", justifySelf:"left"}}>Location</div>
+            <div id="overlay_location" style={{paddingRight:"50px", justifySelf:"right"}}></div>
+            <div style={{paddingLeft:"50px", justifySelf:"left"}}>Origin</div>
+            <div id="overlay_origin" style={{paddingRight:"50px", justifySelf:"right"}}></div>
+            <div ref={mapRef} className="map"></div>
+
         </div>
     )
 }
@@ -206,8 +233,6 @@ document.addEventListener('click', (e) => {
 })
 
 export default function DiaryMain(){
-
-    const [uid, setuid] = useState("sample_uid")
     const [loc, setloc] = useState(null)
     const [org, setorg] = useState(null)
     const [selectedImage, setselectedImage] = useState(null)
