@@ -6,12 +6,12 @@
 }
 #diary_grid{
     grid-column: 2/2;
-    border-radius:15%;
+    border-radius: 80px;
 
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-auto-rows: 150px;
-    background-color: #F47B0A;
+    background-color: #FCECC7;
     opacity: 50%;
     row-gap: 30px;
     column-gap: 10px;
@@ -28,21 +28,28 @@
     border-radius: 50%;
     object-fit: cover;
 }
+.diary_fill{
+    background-color:#E4C281;
+    width: 100% ;
+    height:169.05px;
+    aspect-ratio:1;
+    object-fit:cover;
+    border-radius:50%
+}
 #diary_overlay{
     width:500px;
     position: absolute;
     top: 30%;
     left: 50%;
     transform: translate(-50%, 0%);
-    background-color: rgb(231, 231, 231);
-    border-radius: 10%;
+    background-color: white;
     z-index: 2;
     padding:30px;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 50px auto 30px 30px;
     text-align: center;
     justify-items:center;
-    row-gap:10px;
+    row-gap:20px;
 }
 #overlay_close{
     grid-column: 2/3;

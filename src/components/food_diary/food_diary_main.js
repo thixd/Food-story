@@ -6,6 +6,8 @@ import './food_diary.css'
 import IconButton from "@material-ui/core/IconButton"
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto"
 import CloseIcon from '@material-ui/icons/Close'
+import ArrowLeftIcon from '@material-ui/icons/ArrowLeft'
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 //import UID
 
 //Sample variables for test
@@ -53,14 +55,29 @@ function OrgSelect(setter){
 
 function Renderer(loc, org, setselectedImage){
     const [urls, seturls] = useState([])
-
+    useEffect(() => {
+        if (urls.length !== 31){
+            var tmp = urls.slice()
+            while (tmp.length!==31){
+                tmp.push(null)
+            }
+            seturls(tmp)
+        }
+    }, [urls])
     useEffect(() => {
         firebase.database().ref(uid).get().then((snapshot) =>{
             const maps = Object.keys(snapshot.val()['feeds']).map((key) =>{
                 return [snapshot.val()['feeds'][key]['image'], key]
             })
+            if (maps.length !== 31){
+                var tmp = maps.slice()
+                while (tmp.length!==31){
+                    tmp.push(null)
+                }
+            }
             seturls(maps)
         })
+        
     }, [])
 
     useEffect(() => {
@@ -83,7 +100,9 @@ function Renderer(loc, org, setselectedImage){
                 var res = []
                 for (var i=0; i<maps.length;i++){
                     for (var j=0; j<tmp.length; j++){
-                        if (maps[i][0]===tmp[j][0]) res.push(maps[i])
+                        console.log(maps)
+                        console.log(tmp)
+                        if (tmp[j]!==null && maps[i][0]===tmp[j][0]) res.push(maps[i])
                     }
                 }
                 seturls(res)
@@ -96,11 +115,18 @@ function Renderer(loc, org, setselectedImage){
     }
 
     if (urls===[]) return null
-    return urls.map(map => (
-        <div>
-            <img src={map[0]} id={map[1]} className="diary_image" onClick={imageClick}/>
-        </div>
-        ))  
+
+    return urls.map(map => {
+        if (map!=null){
+            return (<div>
+                    <img src={map[0]} id={map[1]} className="diary_image" onClick={imageClick}/>
+                </div>
+            )
+        }
+        else{
+            return (<div><div className="diary_fill"></div></div>)
+        }
+    }) 
 }
 
 function DiaryOverlay(selectedImage){
@@ -168,6 +194,7 @@ function Upload_file(){
 }
 
 document.addEventListener('click', (e) => {
+    if (document.getElementById("diary_overlay")==null) return
     if (document.getElementById("diary_overlay").style.display === "grid" &&
         !document.getElementById("diary_overlay").contains(e.target)){
         document.getElementById("diary_overlay").style.display = "none"
@@ -188,9 +215,9 @@ export default function DiaryMain(){
         <SelectionContext.Provider value={{loc, setloc, org, setorg, selectedImage, setselectedImage}}>
             <div>
                 <AppNavBar/>
-                <div style={{display:"grid", gridTemplateColumns:"5fr 2fr 1fr 2fr 2fr", paddingTop:"10px"}}>
+                <div style={{display:"grid", gridTemplateColumns:"5fr 2fr 1fr 2fr 2fr", paddingTop:"10px", paddingBottom:"20px"}}>
                     <div></div>
-                    <div style={{textAlign:"center", fontSize:"40px"}}>May</div>
+                    <div style={{textAlign:"center", fontSize:"40px"}}><ArrowLeftIcon/>May 2021<ArrowRightIcon/></div>
                     <div style={{textAlign:'right', paddingTop:"7px"}}>Filter by: </div>
                     <div>{LocSelect(setloc)}</div>
                     <div>{OrgSelect(setorg)}</div>
