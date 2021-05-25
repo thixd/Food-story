@@ -3,6 +3,7 @@ import AppNavBar from '../../utils/app_bar'
 import firebase from '../../firebase'
 import AsyncSelect from "react-select/async"
 import mapboxgl from 'mapbox-gl'
+import {useHistory} from 'react-router-dom'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import './food_diary.css'
 import IconButton from "@material-ui/core/IconButton"
@@ -154,9 +155,6 @@ function DiaryOverlay(selectedImage){
         })
     }, [])
 
-
-
-
     useEffect(() => {
         if (selectedImage===null) return null
         firebase.database().ref('/Feeds/'+selectedImage.id).get().then((snapshot) =>{
@@ -168,8 +166,16 @@ function DiaryOverlay(selectedImage){
         })
     }, [selectedImage])
 
+    const history = useHistory()
     function share(){
         //do_something
+        var prop = {'BoxProps': {'val': {image:document.getElementById('overlay_image').src, 'user': uid},
+                'feedkey': selectedImage.id
+        }}
+
+        history.push({
+            pathname:'/single_post'
+        })
     }
     return (
         <div id="diary_overlay" style={{display:"none"}} ref={overlayref}>
@@ -194,15 +200,15 @@ function Upload_file(){
     const [file, setfile] = useState(null)
     useEffect(() => {
         if (file==null) return
-        const feedkey_list = String(firebase.database().ref('/feeds/').push()).split('/')
+        const feedkey_list = String(firebase.database().ref('/Feeds/').push()).split('/')
         const feedkey = feedkey_list[feedkey_list.length -1]
         const imgref = firebase.storage().ref().child(uid).child('images').child(feedkey)
         imgref.put(file).then(() => {
             alert("file uploaded")
         }).then(() => {
             firebase.storage().ref().child(uid).child('images').child(feedkey).getDownloadURL().then((value) =>{
-                firebase.database().ref('/feeds/'+feedkey+'image').set(value)
-                firebase.database().ref(uid+'/feeds/'+feedkey+"/image").set(value)
+                firebase.database().ref('/Feeds/'+feedkey+'image').set(value)
+                firebase.database().ref(uid+'/Feeds/'+feedkey+"/image").set(value)
             })
         })
     }, [file])
