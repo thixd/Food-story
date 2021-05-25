@@ -7,20 +7,35 @@ import SnsMain from './components/sns/sns_main';
 import SnsUser from './components/sns/sns_user';
 import RestaurantReview from './components/resreview/restaurant_review.js';
 import SinglePostView from './components/single_post/single_post.js';
+import { useHistory, withRouter } from 'react-router-dom';
+
+function Tmp(props){
+  let history = useHistory();
+	function movetoResReview() {
+		history.push({
+			pathname: "/restaurant-review",
+			state: props
+		})
+	}
+	return(
+		<div onClick = {movetoResReview}><a>{"#" + props.name}</a></div>
+	)
+}
+
 function App() {
-  var res = {
-    name: "Italy"
-  }
+  var name = "Italy";
   return (
     <Router>
       <Switch>
-          <Route exact path = "/" component = {SignInSide} />
+          <Route exact path = "/" >
+            <Tmp name = {name}/>
+          </Route>
           <Route path = "/home" component = {HomePage} />
           <Route path = "/diary" component = {DiaryMain} />
           <Route path = "/sns" component = {SnsMain} />
           <Route path = "/user" component = {SnsUser} />
           <Route path = "/single-post" component = {SinglePostView}/>
-          <Route path = "/restaurant-review" compoent = {RestaurantReview}/>
+          <Route path = "/restaurant-review" component = {RestaurantReview}/>
       </Switch> 
     </Router>
   )

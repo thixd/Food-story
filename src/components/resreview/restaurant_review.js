@@ -3,10 +3,11 @@ import Grid from '@material-ui/core/Grid';
 import SingleBox from './single_box.js';
 import AppNavBar from '../../utils/app_bar'
 import firebase from '../../firebase'
-// import { HeaderBackButton } from 'react-navigation';
+import { useLocation, withRouter } from 'react-router-dom';
+/* --------------------------------------- Style ----------------------------------------*/
 const singleRow = {
 	height: 350,
-	marginLeft: 100,
+	// marginLeft: 20, 
 	// marginLeft: 27,
 	marginBottom: 20,
 	align: "center",
@@ -16,62 +17,92 @@ const singleRow = {
 	position: "relative",
 	display: "flex",
 }
-
-var lstLink = [];
-var newLink = [];
-const db = firebase.database();
-var finalLink = [];
+/* --------------------------------------- Style ----------------------------------------*/
 
 
 class RestaurantReview extends Component{
 	constructor(props){
+		console.log(props);
 		super(props)
 		this.state = {
-			getData: false
+			finalLink: [],
+			lstLink: [],
+			newLink: [],
+			getData: false,
 		}
 	}
 	crawlData = () => {
 		firebase.database().ref("Feeds").once('value').then((snapshot) => {
+			var newFinalLink = [];
 			var cnt = 0
-			snapshot.forEach(function(childSnapShot){
-				lstLink.push({'val' : childSnapShot.val(), 'key': cnt, 'feedKey': childSnapShot.key});
+			var cntReaction = 0;
+			var cntComment = 0;
+			var newListLink = []
+			var resrev = this;
+			console.log(resrev)
+			snapshot.forEach(function(childSnapShot){  //iterating each feed in the type props.name
+				var ok = 0
+				var lll = 0;
+				childSnapShot.val().hashtags.forEach((hashtags) => {
+					lll += 1
+					if(hashtags == resrev.props.location.state.name){
+						ok = 1;
+					}
+				});
+				if(ok == 0)
+					return;
+				cntReaction = 0
+				cntComment = 0
+				// cntComment = childSnapShot.val().comments.length
+				// console.log(childSnapShot.val().comments/)
+				childSnapShot.forEach((grandSnapShot) =>{ //iterating each parameter of a single feed
+					if(grandSnapShot.key == "reaction"){
+						grandSnapShot.forEach((grateGrandChildSnapShot)=>{
+							cntReaction +=1;
+						})
+					}
+					if(grandSnapShot.key == "comments"){
+						grandSnapShot.forEach((grateGrandChildSnapShot)=>{
+							cntComment +=1;
+						})
+					}
+				});
 				cnt ++;
+				newListLink.push({'val' : childSnapShot.val(), 'key': childSnapShot.key, 'feedKey': childSnapShot.key, 'cntReaction': cntReaction, 'cntComment': cntComment});
 			});
-			// console.log('this ->', lstLink)
-			newLink = lstLink.map(link => <SingleBox key = {link.key} BoxProps = {link}/>)
-			for(var index = 0; index < lstLink.length; index++) {
+			newListLink = newListLink.map(link => <SingleBox key = {link.key} BoxProps = {link} cntReaction = {cntReaction} cntComment = {cntComment}/>)
+			for(var index = 0; index < newListLink.length; index++) {
 				var tmpLink = []
-				tmpLink.push(newLink[index]);
+				tmpLink.push(newListLink[index]);
 				index++;
-				if(index < lstLink.length){
-					tmpLink.push(newLink[index]);
+				if(index < newListLink.length){
+					tmpLink.push(newListLink[index]);
 				}
 				index++;
-				if(index < lstLink.length){
-					tmpLink.push(newLink[index]);
+				if(index < newListLink.length){
+					tmpLink.push(newListLink[index]);
 				}
-				finalLink.push(tmpLink);
+				newFinalLink.push(tmpLink);
 			}
-			// console.log('this is the previous version of final link ', finalLink)
-			finalLink = finalLink.map(row => <Grid container style = {singleRow}> {row}</Grid>)
-			// console.log('this is final link', finalLink)
-			this.setState((prevState) => ({getData: true}));
+			newFinalLink = newFinalLink.map(row => <Grid container style = {singleRow}> {row}</Grid>)
+			this.setState({finalLink: newFinalLink,lstLink: newListLink,getData: true})
+			
 		});
 	}
 
 	render() {
 		if(this.state.getData == false) {
-			// console.log('cac')
-			this.crawlData()
+			this.crawlData();
 		}
-		// console.log('caca',finalLink)
 		return (
 			<>
 				<AppNavBar />
 				<Grid container>
-					<p>{this.props.name}</p>
+					<Grid item md = {1} style = {{marginLeft: 30}}>
+						<p style={{ color: '#F47B0A', fontSize: 27,}} >{this.props.location.state.name}</p>
+					</Grid>
 				</Grid>
-				{finalLink}
+				{this.state.finalLink}
 			</>
 		)
 	}
@@ -79,5 +110,6 @@ class RestaurantReview extends Component{
 
 	
 }
+
 
 export default RestaurantReview
