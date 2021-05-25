@@ -154,15 +154,13 @@ function DiaryOverlay(selectedImage){
             zoom: zoom
         })
     }, [])
-
     useEffect(() => {
         if (selectedImage===null) return null
         firebase.database().ref('/Feeds/'+selectedImage.id).get().then((snapshot) =>{
             document.querySelector('#overlay_image').src = selectedImage.src 
             document.querySelector('#overlay_location').textContent = snapshot.val()['location']
             document.querySelector('#overlay_origin').textContent = snapshot.val()['origin']
-            map.current.setCenter([snapshot.val()['lng'], snapshot.val()['lat']])
-
+            //map.current.setCenter([snapshot.val()['lng'], snapshot.val()['lat']])
         })
     }, [selectedImage])
 
