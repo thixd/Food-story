@@ -7,14 +7,13 @@ import { useHistory, withRouter } from 'react-router-dom';
 /* --------------------------------------- Style ----------------------------------------*/
 const imageBox = {
 	border: 1,
-	borderRadius: 16,
 	width: 600,
 	height: 400,
 	justifyContent: "center", 
 	alignItems: "center",
 	position: "relative",
 	display: "flex",
-	boxShadow: "2px 3px 1px #9E9E9E"
+	
 }
 const textBox = {
 	width: 600,
@@ -47,9 +46,9 @@ const infoUser = {
 }
 const singleImage = {
 	height: '100%',
-	width: '100%',
-	borderRadius:16,
-	position: "relative"
+	width: 'auto',
+	position: "relative",
+	boxShadow: "2px 3px 1px #9E9E9E"
 }
 const post = {
 	align: 'center',
@@ -247,7 +246,7 @@ class SinglePostView extends Component{
 						<Grid container style = {displayUser}>
 							<Grid container style = {infoUser}>
 								<Grid item md = {1}> <div>{ava}</div></Grid>
-								<Grid item md = {8}> <div>{localState.BoxProps.val.user}</div> </Grid>
+								<Grid item md = {8}> <div><p style = {{margin: 0, fontWeight: "bold", fontSize: 18}}>{localState.BoxProps.val.user}</p></div> </Grid>
 								<Grid item> <div>{localState.reaction.length - 1}</div></Grid>
 								<Grid item md = {1}> <div  onClick = {this.updateReaction}>
 									{localState.reacted == 1 ? liked : unliked}

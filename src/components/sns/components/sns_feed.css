@@ -150,7 +150,6 @@
 .feed .feed_reaction .feed_reaction_comment_image {
   width: 40px;
   height: 40px;
-  filter: grayscale(100%);
 }
 
 /* Feed Comments */

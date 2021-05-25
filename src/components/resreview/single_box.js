@@ -25,7 +25,7 @@ const GridCell = {
 }
 const singleImage = {
 	height: '100%',
-	width: '100%',
+	width: 'auto',
 	borderRadius:16,
 	position: "relative"
 }
@@ -45,7 +45,9 @@ const userBox = {
 const userDisplay = {
 	// position: "relative",
 	margin: 0,
-	marginLeft: 10
+	marginLeft: 10,
+	fontSize: 16,
+    fontWeight: "bold"
 }
 const ftDisplay = {
 	marginLeft: 10,

@@ -34,7 +34,7 @@ function SingleComment(props) {
         <Grid container style = {displayText}>
             {/* {localState.comments} */}
             <div style = {singleComment}>
-                <Grid container><p>{ava}</p><p style = {{marginLeft: 10}}>{props.name}</p></Grid>
+                <Grid container><p>{ava}</p><p style = {{marginLeft: 10, fontWeight: "bold", fontSize: 16}}>{props.name}</p></Grid>
                 <Grid container >
                     <Grid items md = {12} style = {{overflowWrap: 'break-word',}}>
                         <p style = {{margin: 0}}>{props.text}</p>
