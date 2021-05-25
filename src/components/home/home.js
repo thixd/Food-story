@@ -4,8 +4,9 @@ import FriendStory from './friends';
 import MyWall from './my_wall'
 import { useAuth } from '../../contexts/auth_context'
 export default function HomePage(){
-  const { currentUser } = useAuth;
-  //currentUser.uid
+  const { currentUser } = useAuth();
+  // console.log(currentUser.uid);
+  // const uid = currentUser.uid
   return(
     <>
       <AppNavBar/>
@@ -13,6 +14,7 @@ export default function HomePage(){
       <FriendStory/>
       <div style={{paddingTop: 50}}/>
       <MyWall/>
+      <br/>
     </>
   )
 }
