@@ -14,10 +14,10 @@ function App() {
     <Router>
       <AuthProvider>
         <Switch>
-            <PrivateRoute path="/" component={HomePage} />
-            <PrivateRoute path="/diary" component={DiaryMain} />
-            <PrivateRoute path="/sns" component={SnsMain} />
-            <PrivateRoute path="/user" component={SnsUser} />
+            <Route exact path="/" component={HomePage} />
+            <Route path="/diary" component={DiaryMain} />
+            <Route path="/sns" component={SnsMain} />
+            <Route path="/user" component={SnsUser} />
 
             <Route path="/signup" component={SignUpSide} />
             <Route path="/signin" component={SignInSide} />
