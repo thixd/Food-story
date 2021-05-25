@@ -5,7 +5,7 @@ import SnsNew from './components/sns_new';
 import SnsFeed from './components/sns_feed';
 import firebase from '../../firebase';
 
-export default function SnsMain(){
+export default function SnsMain({history}){
     // feeds info
     const [feeds, setFeeds] = useState([]);
 
@@ -24,9 +24,9 @@ export default function SnsMain(){
         <>
             <AppNavBar/>
             <div className="sns_main">
-                <SnsNew uid={uid} />
+                <SnsNew uid={uid} history={history} />
                 {Object.keys(feeds).map((feedId) => 
-                    <SnsFeed feedId={feedId} feedInfo={feeds[feedId]} />
+                    <SnsFeed feedId={feedId} feedInfo={feeds[feedId]} history={history} />
                 )}
             </div>
         </>

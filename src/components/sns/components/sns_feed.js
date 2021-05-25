@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./sns_feed.css";
 import firebase from "../../../firebase";
 
-export default function SnsFeed({feedId, feedInfo}){
+export default function SnsFeed({history, feedId, feedInfo}){
   // Whether range dropdown is opened
   const [rangeOpened, setRangeOpened] = useState(false);
 
@@ -77,6 +77,29 @@ export default function SnsFeed({feedId, feedInfo}){
     }
   }
 
+  // hashtag handler
+  function hashtagHandler(hashtag) {
+    history.push({
+			pathname: "/restaurant-review",
+			state: {
+        name: hashtag
+      }
+		});
+  }
+
+  // comments handler
+  function commentsHandler() {
+    history.push({
+      pathname: "/single-post", 
+      state: {
+        BoxProps: {
+          feedKey: feedId, 
+          val: feed
+        }
+      }
+    });
+  }
+
   // Other images
   const privateIcon = "https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fprivate_icon.png?alt=media&token=57b523de-f0ae-4877-ae30-5d5374d16cc3";
   const publicIcon = "https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fpublic_icon.png?alt=media&token=4eb66ae0-36b3-4708-a42e-cad5ed2b32d8";
@@ -96,7 +119,7 @@ export default function SnsFeed({feedId, feedInfo}){
               {author.nickname}
             </span>
             <span className="feed_info_time">
-              {feed.time}, {feed.location}
+              {feed.time}, {feed.origin} food at {feed.location}
             </span>
           </div>
         </div>
@@ -148,8 +171,13 @@ export default function SnsFeed({feedId, feedInfo}){
         src={feed.image}
         alt="feed"
       />
-      <span className="feed_hashtag">
-        #{feed.origin} #{feed.hashtags.join(" #")}
+      <span className="feed_hashtags">
+        { feed.hashtags.map((ht) => 
+          <span className="feed_hashtag" 
+            onClick={() => hashtagHandler(ht)}>
+            #{ht}
+          </span>
+        ) }
       </span>
       <span className="feed_text">
         {feed.text}
@@ -157,17 +185,20 @@ export default function SnsFeed({feedId, feedInfo}){
       <div className="feed_reaction">
         <div className={Object.values(feed.reaction).find((v) => v === author.nickname) ? "feed_reaction_like_enabled" : "feed_reaction_like_disabled"}
           onClick={() => reactionHandler()}>
-          <span className="feed_reaction_like">{Object.keys(feed.reaction).length}</span>
+          <span className="feed_reaction_like">{Object.keys(feed.reaction).length - 1}</span>
           <img className="feed_reaction_like_image" 
             src={likeIcon}
             alt="like"
           />
         </div>
-        <span className="feed_reaction_comment">{Object.keys(feed.comments).length}</span>
-        <img className="feed_reaction_comment_image" 
-          src={commentIcon}
-          alt="comment"
-        />
+        <div className="feed_reaction_comment_container"
+          onClick={() => commentsHandler()}>
+          <span className="feed_reaction_comment">{Object.keys(feed.comments).length - 1}</span>
+          <img className="feed_reaction_comment_image" 
+            src={commentIcon}
+            alt="comment"
+          />
+        </div>
       </div>
       
     </div>
