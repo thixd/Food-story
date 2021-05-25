@@ -1,0 +1,7 @@
+/* SNS Main Main Controller */
+.sns_main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
