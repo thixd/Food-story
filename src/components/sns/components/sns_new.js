@@ -3,7 +3,7 @@ import "./sns_feed.css";
 import "./sns_new.css";
 import firebase from "../../../firebase";
 
-export default function SnsNew({uid}){
+export default function SnsNew({history, uid}){
   const [author, setAuthor] = useState({});
 
   // Load my info

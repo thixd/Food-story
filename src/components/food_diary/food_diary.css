@@ -12,9 +12,8 @@
     grid-template-columns: repeat(8, 1fr);
     grid-auto-rows: 150px;
     background-color: #FCECC7;
-    opacity: 50%;
-    row-gap: 30px;
-    column-gap: 10px;
+    row-gap: 50px;
+    column-gap: 30px;
     padding-top:100px;
     padding-bottom: 100px;
     padding-left: 50px;

@@ -13,7 +13,7 @@ function Tmp(props){
   let history = useHistory();
 	function movetoResReview() {
 		history.push({
-			pathname: "/restaurant-review",
+			pathname: "/home",
 			state: props
 		})
 	}
@@ -23,13 +23,10 @@ function Tmp(props){
 }
 
 function App() {
-  var name = "Italy";
   return (
     <Router>
       <Switch>
-          <Route exact path = "/" >
-            <Tmp name = {name}/>
-          </Route>
+          <Route exact path = "/" component = {HomePage} />
           <Route path = "/home" component = {HomePage} />
           <Route path = "/diary" component = {DiaryMain} />
           <Route path = "/sns" component = {SnsMain} />
