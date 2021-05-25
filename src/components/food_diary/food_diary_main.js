@@ -213,14 +213,16 @@ function Upload_file(){
     const upload = (e) => {
         setfile(tmp => e.target.files[0])
     }
-    return <div style={{gridRow:1/1, gridColumn:1/1}}>
+    return (
+        <div style={{gridRow:1/1, gridColumn:1/1}}>
         <input type="file" onChange={upload} accept="image/*" id="upload_btn" style={{display:"none"}}/>
         <label htmlFor="upload_btn">
             <IconButton aria-label="addaphoto" component="span">
                 <AddAPhotoIcon style={{fontSize:"50"}}/>
             </IconButton>  
         </label>
-    </div>
+        </div>
+    );
     
 }
 

@@ -7,7 +7,9 @@ import firebase from '../../firebase'
 /* --------------------------------------- Style ----------------------------------------*/
 const singleBox = {
 	border: 1,
-	borderRadius: 16,
+	borderColor: "#D7D6D6",
+	borderStyle: "solid",
+	borderRadius: 6,
 	width: 450,
 	height: 300,
 	align: "center",
@@ -15,7 +17,6 @@ const singleBox = {
 	alignItems: "center",
 	position: "relative",
 	display: "flex",
-	boxShadow: "2px 2px 1px #9E9E9E",
 }
 const GridCell = {
 	// direction:"column",
@@ -26,13 +27,12 @@ const GridCell = {
 const singleImage = {
 	height: '100%',
 	width: 'auto',
-	borderRadius:16,
+	borderRadius:6,
 	position: "relative"
 }
 const userBox = {
 	border: 1,
-
-	borderRadius: 16,
+	borderRadius: 6,
 	width: 450,
 	height: 60,
 	bottom: 0,
@@ -48,10 +48,6 @@ const userDisplay = {
 	marginLeft: 10,
 	fontSize: 16,
     fontWeight: "bold"
-}
-const ftDisplay = {
-	marginLeft: 10,
-
 }
 /* --------------------------------------- Style ----------------------------------------*/
 var icnLiked, icnComment;
@@ -71,7 +67,6 @@ function SingleBox(props){
 		})
 	}
 	return(
-		// <></>
 		<Grid item md = {4} css = {GridCell}>
 			<div onClick = {moveToSinglePost} align = "center">
 				<Grid style = {singleBox}>
@@ -82,10 +77,10 @@ function SingleBox(props){
 							<p style = {userDisplay}>{props.BoxProps.val.user} </p>
 						 </Grid>
 						 <Grid container width = {100} height = {20}>
-						 	 <Grid item style = {ftDisplay}> {props.BoxProps.cntReaction - 1}</Grid>
-							 <Grid item style = {ftDisplay}> {icnLiked}</Grid>
-							 <Grid item style = {ftDisplay}> {props.BoxProps.cntComment -1}</Grid>
-							 <Grid item style = {ftDisplay}> {icnComment}</Grid>
+						 	 <Grid item style = {{marginLeft: 10}}> {props.BoxProps.cntReaction - 1}</Grid>
+							 <Grid item style = {{margin: 4}}> {icnLiked}</Grid>
+							 <Grid item style = {{marginLeft: 10}}> {props.BoxProps.cntComment -1}</Grid>
+							 <Grid item style = {{margin: 4}}> {icnComment}</Grid>
 						 </Grid>
 					</div>
 				</Grid>

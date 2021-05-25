@@ -7,8 +7,8 @@ import { useHistory, withRouter } from 'react-router-dom';
 /* --------------------------------------- Style ----------------------------------------*/
 const imageBox = {
 	border: 1,
-	width: 600,
-	height: 400,
+	width: 790,
+	height: 460,
 	justifyContent: "center", 
 	alignItems: "center",
 	position: "relative",
@@ -126,12 +126,16 @@ class SinglePostView extends Component{
 			reacted: 0,
 			userCmt: "",
 			hashtag: [],
+			time: "",
+			location: "",
 		}
 	}
 	crawlData = () => {
 		var post = this;
 		firebase.database().ref("Feeds/" + post.state.BoxProps.feedKey).once('value').then((snapshot) => {
 			post.setState({reaction: snapshot.val().reaction});
+			post.setState({time: snapshot.val().time})
+			post.setState({location: snapshot.val().location})
 			firebase.database().ref("Feeds/" + post.state.BoxProps.feedKey + "/comments").once('value').then((cmtSnapShot) => {
 				var newComments = [];
 				cmtSnapShot.forEach((childSnapShot) => {
@@ -227,6 +231,7 @@ class SinglePostView extends Component{
 		}
 	}
 	render(){
+		console.log(this.state.time);
 		if(this.state.getData == false) {		
 			this.crawlData()
 		}
@@ -246,13 +251,16 @@ class SinglePostView extends Component{
 						<Grid container style = {displayUser}>
 							<Grid container style = {infoUser}>
 								<Grid item md = {1}> <div>{ava}</div></Grid>
-								<Grid item md = {8}> <div><p style = {{margin: 0, fontWeight: "bold", fontSize: 18}}>{localState.BoxProps.val.user}</p></div> </Grid>
+								<Grid item md = {8}>
+									 <div><p style = {{margin: 0, fontWeight: "bold", fontSize: 18}}>{localState.BoxProps.val.user}</p></div> 
+									 <div>{this.state.time + ", " + this.state.location}</div>
+								</Grid>
 								<Grid item> <div>{localState.reaction.length - 1}</div></Grid>
-								<Grid item md = {1}> <div  onClick = {this.updateReaction}>
+								<Grid item md = {1} style = {{marginLeft: 10}}> <div  onClick = {this.updateReaction}>
 									{localState.reacted == 1 ? liked : unliked}
 								</div></Grid>
 								<Grid item> <div>{localState.comments.length}</div> </Grid>
-								<Grid item md = {1}> <div>{icnComment}</div> </Grid>
+								<Grid item md = {1} style = {{marginLeft: 10}}> <div>{icnComment}</div> </Grid>
 							</Grid>
 						</Grid>
 						<hr/>

@@ -42,19 +42,18 @@ class RestaurantReview extends Component{
 			console.log(resrev)
 			snapshot.forEach(function(childSnapShot){  //iterating each feed in the type props.name
 				var ok = 0
-				var lll = 0;
-				childSnapShot.val().hashtags.forEach((hashtags) => {
-					lll += 1
-					if(hashtags == resrev.props.location.state.name){
-						ok = 1;
-					}
-				});
-				if(ok == 0)
+				var HashTags = childSnapShot.val().hashtags
+				console.log(HashTags); 
+				for(var i = 0; i < HashTags.length; i++){
+					if(HashTags[i] == resrev.props.location.state.name)
+					   ok = 1;
+					console.log(HashTags[i], resrev.props.location.state.name)
+				}
+				console.log(childSnapShot.val().isPrivate)
+				if(childSnapShot.val().isPrivate == true || ok == 0)
 					return;
 				cntReaction = 0
 				cntComment = 0
-				// cntComment = childSnapShot.val().comments.length
-				// console.log(childSnapShot.val().comments/)
 				childSnapShot.forEach((grandSnapShot) =>{ //iterating each parameter of a single feed
 					if(grandSnapShot.key == "reaction"){
 						grandSnapShot.forEach((grateGrandChildSnapShot)=>{
