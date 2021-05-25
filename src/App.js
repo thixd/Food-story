@@ -8,6 +8,10 @@ import SnsMain from './components/sns/sns_main';
 import SnsUser from './components/sns/sns_user';
 import { AuthProvider } from './contexts/auth_context';
 import PrivateRoute from './contexts/private_route';
+import RestaurantReview from './components/resreview/restaurant_review.js';
+import SinglePostView from './components/single_post/single_post.js';
+import { useHistory, withRouter } from 'react-router-dom';
+
 
 function App() {
   return (
@@ -18,9 +22,11 @@ function App() {
             <Route path="/diary" component={DiaryMain} />
             <Route path="/sns" component={SnsMain} />
             <Route path="/user" component={SnsUser} />
+            <Route path = "/single-post" component = {SinglePostView}/>
+            <Route path = "/restaurant-review" component = {RestaurantReview}/>
 
-            <Route path="/signup" component={SignUpSide} />
             <Route path="/signin" component={SignInSide} />
+            
         </Switch>
       </AuthProvider>
     </Router>
