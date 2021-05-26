@@ -11,6 +11,10 @@ import AddAPhotoIcon from "@material-ui/icons/AddAPhoto"
 import ShareIcon from '@material-ui/icons/Share'
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import Avatar from '@material-ui/core/Avatar';
 //import UID
 
 mapboxgl.accessToken = "pk.eyJ1Ijoic3Rhcm1wY2MiLCJhIjoiY2tvM25tN3prMDhkZTJvbm1ndGdpZ29wdiJ9.UNImIqbOG-IOXPZgqM5GwQ"
@@ -70,22 +74,35 @@ function Renderer(loc, org, setselectedImage){
         }
     }, [urls])
     useEffect(() => {
-        firebase.database().ref(uid).get().then((snapshot) =>{
-            if(typeof(snapshot.val()['feeds']) == "undefined")
-                return;
-            const maps = Object.keys(snapshot.val()['feeds']).map((key) =>{
-                return [snapshot.val()['feeds'][key]['image'], key]
-            })
-            if (maps.length !== 31){
-                var tmp = maps.slice()
-                while (tmp.length!==31){
-                    tmp.push(null)
-                }
-            }
-            seturls(maps)
+        firebase.database().ref(uid).on('value', snapshot => {
+        const maps = Object.keys(snapshot.val()['feeds']).map((key) =>{
+            return [snapshot.val()['feeds'][key], key]
         })
-        
+        if (maps.length !== 31){
+            var tmp = maps.slice()
+            while (tmp.length!==31){
+                tmp.push(null)
+            }
+        }
+        seturls(maps)
+        })
     }, [])
+        // firebase.database().ref(uid).get().then((snapshot) =>{
+        //     if(typeof(snapshot.val()['feeds']) == "undefined")
+        //         return;
+        //     const maps = Object.keys(snapshot.val()['feeds']).map((key) =>{
+        //         return [snapshot.val()['feeds'][key]['image'], key]
+        //     })
+        //     if (maps.length !== 31){
+        //         var tmp = maps.slice()
+        //         while (tmp.length!==31){
+        //             tmp.push(null)
+        //         }
+        //     }
+        //     seturls(maps)
+        // })
+        
+    // }, [])
 
     useEffect(() => {
         console.log(loc)
@@ -125,13 +142,23 @@ function Renderer(loc, org, setselectedImage){
 
     return urls.map(map => {
         if (map!=null){
-            return (<div>
-                    <img src={map[0]} id={map[1]} style = {{width: '100%', height: '100%'}} className="diary_image" alt="" onClick={imageClick}/>
+            return (
+                <div >
+                    <div style = {{display: 'flex', justifyContent:'center', alignItems:'center', paddingBottom: 5}}> 
+                        <img src={map[0]['image']} id={map[1]} style = {{width: 90, height: 90}} className="diary_image" alt="" onClick={imageClick}/>
+                    </div>
+                    <div style = {{display: 'flex', justifyContent:'center', alignItems:'center'}}> {map[0]['createAt']} </div>
                 </div>
             )
         }
         else{
-            return (<div><div className="diary_fill"></div></div>)
+            var white_plate = "https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fwhite_plate.jpg?alt=media&token=4ab38285-4bd3-4ce9-84b8-2c27f295afcc"
+            return(
+                <div style = {{display: 'flex', justifyContent:'center', alignItems:'center'}} >
+                    <Avatar style={{ height: '100px', width: '100px' }} alt="" src= {white_plate}/>
+                </div>
+            )
+            // return (<div><div className="diary_fill"></div></div>)
         }
     }) 
 }
@@ -222,24 +249,33 @@ function DiaryOverlay(selectedImage){
 
 
 //Upload file
-function Upload_file(){
-    const [file, setfile] = useState(null)
+function Upload_file(file, setfile, setProgress){
     useEffect(() => {
         if (file==null) return
         const feedkey_list = String(firebase.database().ref('/Feeds/').push()).split('/')
         const feedkey = feedkey_list[feedkey_list.length -1]
         const imgref = firebase.storage().ref().child(uid).child('images').child(feedkey)
-        imgref.put(file).then(() => {
-            alert("file uploaded")
-        }).then(() => {
+        var uploadTask = imgref.put(file)
+        uploadTask.on('state_changed', function(snapshot){
+            var curProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log(curProgress);
+            setProgress(curProgress);
+        }, function(error) {
+            alert("Cannot upload!")
+        }, function(){
+            var currentdate = new Date();
             firebase.storage().ref().child(uid).child('images').child(feedkey).getDownloadURL().then((value) =>{
                 // firebase.database().ref('/Feeds/'+feedkey+'/image').set(value)
                 firebase.database().ref(uid+'/feeds/'+feedkey+"/image").set(value)
                 // firebase.database().ref('/Feeds/'+feedkey+'/origin').set("Korea")
                 firebase.database().ref(uid+'/feeds/'+feedkey+"/origin").set("Korea")
                 // firebase.database().ref('/Feeds/'+feedkey+'/location').set("Daejon")
-                firebase.database().ref(uid+'/feeds/'+feedkey+"/location").set("Daejon")
+                firebase.database().ref(uid+'/feeds/'+feedkey+"/location").set("Daejeon")
+                firebase.database().ref(uid+'/feeds/'+feedkey+"/createAt").set(currentdate.toDateString())
             })
+            setProgress(0)
+            setfile(null)
+            alert("Image has successfully uploaded!")
         })
     }, [file])
     const upload = (e) => {
@@ -270,25 +306,44 @@ document.addEventListener('click', (e) => {
     }
 })
 
+function LinearProgressWithLabel(props) {
+    return (
+      <Box style = {{width : 1050}} display="flex" justifyContent="center">
+        <Box width="100%" mr={1}>
+          <LinearProgress 
+            variant="determinate" {...props} />
+        </Box>
+        <Box minWidth={35}>
+          <Typography variant="body2" color="textSecondary">{`${Math.round(
+            props.value,
+          )}%`}</Typography>
+        </Box>
+      </Box>
+    );
+  }
+
 export default function DiaryMain(){
     const [loc, setloc] = useState(null)
     const [org, setorg] = useState(null)
     const [selectedImage, setselectedImage] = useState(null)
+    const [progress, setProgress] = useState(0)
+    const [file, setfile] = useState(null)
     return (
+        <>
         <SelectionContext.Provider value={{loc, setloc, org, setorg, selectedImage, setselectedImage}}>
             <div>
                 <AppNavBar/>
                 <div style={{display:"grid", gridTemplateColumns:"5fr 2fr 1fr 2fr 2fr", paddingTop:"10px", paddingBottom:"20px"}}>
                     <div></div>
                     <div style={{textAlign:"center", fontSize:"40px"}}><ArrowLeftIcon/>May 2021<ArrowRightIcon/></div>
-                    <div style={{textAlign:'right', paddingTop:"7px"}}>Filter by: </div>
-                    <div>{LocSelect(setloc)}</div>
+                    <div style={{textAlign:'right', paddingTop:"7px", paddingRight: 10}}>Filter by: </div>
+                    <div style={{paddingRight: 20}}>{LocSelect(setloc)}</div>
                     <div>{OrgSelect(setorg)}</div>
                 </div>
 
                 <div className="container">
                     <div id="diary_grid">
-                        {Upload_file()}
+                        {Upload_file(file, setfile, setProgress)}
                         {Renderer(loc, org, setselectedImage)}
                     </div>
                 </div>
@@ -296,5 +351,12 @@ export default function DiaryMain(){
                 {/* <SharingOverlay/> */}
             </div>
         </SelectionContext.Provider>
+
+        <div style = {{display: 'flex', justifyContent:'center', alignItems:'center', paddingTop:10, paddingBottom:20}}>
+            { file == null ? (<div></div>) : (
+            <LinearProgressWithLabel value={progress} />
+            )}
+        </div>
+        </>
     )
 }

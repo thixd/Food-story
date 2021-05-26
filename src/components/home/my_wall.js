@@ -44,8 +44,8 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
     justifyContent:'center',
     backgroundColor: '#FCECC7',
-    width: 1000,
-    height: 400,
+    width: 1500,
+    height: 500,
   },
   textUnderCircle: {
     paddingTop: 7,
@@ -82,17 +82,22 @@ export default function MyWall(){
   const [urls, setUrls] = useState([])
   const [file, setfile] = useState(null)
   const [progress, setProgress] = useState(0)
+  const emtyStr = "              "
+  var white_plate = "https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fwhite_plate.jpg?alt=media&token=4ab38285-4bd3-4ce9-84b8-2c27f295afcc"
   // const { currentUser } = useAuth();
   // const uid = currentUser.uid;
   useEffect(() => {
     firebase.database().ref(uid).on('value', snapshot => {
       const urls_data = Object.keys(snapshot.val()['feeds']).map((key) =>{
           return [snapshot.val()['feeds'][key], key]
-      }).slice(-14)
+      }).slice(-23)
+      if(urls_data.length !== 23){
+        console.log("true")
+      }
       setUrls(urls_data)
     })
   }, [])
- 
+  console.log(urls.length)
   useEffect(() => {
       if (file == null) 
         return
@@ -115,7 +120,7 @@ export default function MyWall(){
         })
         setProgress(0)
         setfile(null)
-        // alert("Image has successfully uploaded!")
+        alert("Image has successfully uploaded!")
       })
   }, [file])
 
@@ -148,10 +153,25 @@ export default function MyWall(){
                   </Grid>
                   {urls.map((value) => (
                     <Grid key={value} item>
-                        <div className= {classes.textUnderCircle}>
-                          <Avatar style={{ height: '90px', width: '90px' }} alt="" src= {value[0]['image']}/>
-                        </div>
-                        <div className = {classes.textUnderCircle}> {value[0]['createAt']} </div>
+                       { value === null ? 
+                        (
+                          <Grid item>
+                            <div className= {classes.textUnderCircle}>
+                              <Avatar style={{ height: '100px', width: '100px' }} alt="" src= {white_plate}/>
+                            </div>
+                            <div className = {classes.textUnderCircle}> {emtyStr} </div>
+                          </Grid>
+                        ) 
+                        : 
+                        (
+                          <Grid item>
+                          <div className= {classes.textUnderCircle}>
+                            <Avatar style={{ height: '90px', width: '90px' }} alt="" src= {value[0]['image']}/>
+                          </div>
+                          <div className = {classes.textUnderCircle}> {value[0]['createAt']} </div>
+                          </Grid>
+                        )
+                       }
                     </Grid> 
                     ))}
               </Grid>
@@ -168,4 +188,3 @@ export default function MyWall(){
     </>
   )
 }
-
