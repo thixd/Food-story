@@ -102,7 +102,7 @@ export default function FriendStory(){
   useEffect(() => {
       if (file == null) 
         return
-      const feedkey_list = String(firebase.database().ref('/feeds/').push()).split('/')
+      const feedkey_list = String(firebase.database().ref('/Feeds/').push()).split('/')
       const feedkey = feedkey_list[feedkey_list.length -1]
       const imgref = firebase.storage().ref().child(uid).child('images').child(feedkey)
       var uploadTask = imgref.put(file)
@@ -113,7 +113,7 @@ export default function FriendStory(){
       }, function(){
         var currentdate = new Date();
         firebase.storage().ref().child(uid).child('images').child(feedkey).getDownloadURL().then((value) => {
-          firebase.database().ref('/feeds/'+feedkey+'image').set(value)
+          firebase.database().ref('/Feeds/'+feedkey+'/image').set(value)
           firebase.database().ref(uid+'/feeds/'+feedkey+"/image").set(value)
           firebase.database().ref(uid+'/feeds/'+feedkey+"/createAt").set(currentdate.toDateString())
         })
