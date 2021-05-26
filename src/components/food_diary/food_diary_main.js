@@ -6,6 +6,7 @@ import mapboxgl from 'mapbox-gl'
 import {useHistory} from 'react-router-dom'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import './food_diary.css'
+import Button from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto"
 import ShareIcon from '@material-ui/icons/Share'
@@ -126,7 +127,7 @@ function Renderer(loc, org, setselectedImage){
     return urls.map(map => {
         if (map!=null){
             return (<div>
-                    <img src={map[0]} id={map[1]} style = {{width: '100%', height: '100%'}} className="diary_image" alt="" onClick={imageClick}/>
+                    <img src={map[0]} id={map[1]} className="diary_image" alt="" onClick={imageClick}/>
                 </div>
             )
         }
@@ -196,7 +197,6 @@ function DiaryOverlay(selectedImage){
     const history = useHistory()
     function share(){
         //do_something
-        var prop = {'src': selectedImage.src, 'user': uid}
 
         history.push({
             pathname:'/sharing-post',
@@ -205,9 +205,10 @@ function DiaryOverlay(selectedImage){
     }
     return (
         <div id="diary_overlay" style={{display:"none"}} ref={overlayref}>
-            <IconButton id="overlay_share" component="span" onClick={share}>
-                <p>Share</p>
-            </IconButton>
+            <Button id="overlay_share" component="span" onClick={share}
+                variant="contained" startIcon={<ShareIcon/>}>
+                Share
+            </Button>
             <img id="overlay_image" alt=""></img>
 
             <div style={{paddingLeft:"50px", justifySelf:"left"}}>Location</div>
@@ -239,6 +240,7 @@ function Upload_file(){
                 firebase.database().ref(uid+'/feeds/'+feedkey+"/origin").set("Korea")
                 // firebase.database().ref('/Feeds/'+feedkey+'/location').set("Daejon")
                 firebase.database().ref(uid+'/feeds/'+feedkey+"/location").set("Daejon")
+                window.location.reload()
             })
         })
     }, [file])

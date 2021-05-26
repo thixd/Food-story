@@ -22,7 +22,8 @@
     align-items: center;
 }
 .diary_image{
-    width:100%;
+    width: 169.05px ;
+    height:169.05px;
     aspect-ratio: 1;
     border-radius: 50%;
     object-fit: cover;
