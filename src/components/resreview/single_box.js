@@ -17,6 +17,7 @@ const singleBox = {
 	alignItems: "center",
 	position: "relative",
 	display: "flex",
+	overflow: "hidden"
 }
 const GridCell = {
 	// direction:"column",

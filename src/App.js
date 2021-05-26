@@ -10,9 +10,12 @@ import PrivateRoute from './contexts/private_route';
 import RestaurantReview from './components/resreview/restaurant_review.js';
 import SinglePostView from './components/single_post/single_post.js';
 import { useHistory, withRouter } from 'react-router-dom';
+import SharingPage from './components/food_diary/sharing_part';
 
 
 function App() {
+  var cac = "https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/sample_uid%2Fimages%2F-MaXYTuaIhhfqbyzvT37?alt=media&token=9a4460af-562c-475b-80aa-545117989978"
+  var uid = "sample_uid";
   return (
     <Router>
       <AuthProvider>
@@ -24,7 +27,7 @@ function App() {
             <Route path="/user" component={SnsUser} />
             <Route path = "/single-post" component = {SinglePostView}/>
             <Route path = "/restaurant-review" component = {RestaurantReview}/>
-
+            <Route path = "/sharing-post" component = {SharingPage}/>
             <Route path="/signin" component={SignInSide} />
             
         </Switch>
