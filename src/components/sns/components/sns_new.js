@@ -3,10 +3,10 @@ import "./sns_feed.css";
 import "./sns_new.css";
 import firebase from "../../../firebase";
 import WritePost from "../../write_post";
-
-export default function SnsNew({history, uid}){
+import { Link, useHistory } from 'react-router-dom';
+export default function SnsNew({uid}){
   const [author, setAuthor] = useState({});
-
+  const history = useHistory()
   // Load my info
   useEffect(() => {
     firebase.database().ref(uid).on("value", (snapshot) => {
@@ -16,7 +16,7 @@ export default function SnsNew({history, uid}){
 
   // share handler
   function shareHandler() {
-    return <WritePost/>
+    history.push("/writepost")
   }
 
   return (

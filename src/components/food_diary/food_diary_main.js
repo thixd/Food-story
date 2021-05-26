@@ -229,7 +229,7 @@ function DiaryOverlay(selectedImage){
     }
     return (
         <div id="diary_overlay" style={{display:"none"}} ref={overlayref}>
-            <Button id="overlay_share" component="span" onClick={share}
+            <Button id="overlay_share" component="span" onClick={share} style = {{color: 'white', background: '#F47B0A'}} 
                 variant="contained" startIcon={<ShareIcon/>}>
                 Share
             </Button>

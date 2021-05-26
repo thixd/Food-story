@@ -104,15 +104,16 @@ export default function WritePost(){
   var date = new Date().toDateString();
   const [value, setValue] = useState('')
   const onRTEChange = event => {
-    const plainText = event.getCurrentContent().getPlainText() // for plain text
-    const rteContent = convertToRaw(event.getCurrentContent()) // for rte content with text formating
+    const plainText = event.getCurrentContent().getPlainText()
     setValue(plainText) // store your rteContent to state
+  }
+  function handleSubmit(){
+    
   }
   console.log(value)
   return(
     <>
       <AppNavBar/>
-
       {/* <div style = {{display: 'flex',  justifyContent:'center', alignItems:'center', paddingTop: 30, borderStyle:'solid'}}> */}
       <div style = {{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
       <div className = {classes.grid}>
@@ -141,9 +142,21 @@ export default function WritePost(){
                   onChange={onRTEChange}
                 />,
               </Grid>
+              <div style ={{paddingTop: 50}}> 
+                <Button
+                  type="button"
+                  fullWidth
+                  variant="contained"
+                  // color="primary"
+                  className={classes.submit}
+                  onClick = {handleSubmit}
+                  style = {{color: 'white', background: '#F47B0A'}}
+                >Share</Button>
+              </div>
+              
             </Grid>
         </div>
-      </div>
+    </div>
       
     </>
   )

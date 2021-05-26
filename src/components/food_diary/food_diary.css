@@ -60,6 +60,7 @@
 #overlay_share{
     grid-column: 2/3;
     justify-self: right;
+    color: '#F47B0A';
 }
 #overlay_image{
     max-width:400px;
