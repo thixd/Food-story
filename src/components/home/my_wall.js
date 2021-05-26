@@ -82,7 +82,6 @@ export default function MyWall(){
   const [urls, setUrls] = useState([])
   const [file, setfile] = useState(null)
   const [progress, setProgress] = useState(0)
-  const emtyStr = "              "
   var white_plate = "https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fwhite_plate.jpg?alt=media&token=4ab38285-4bd3-4ce9-84b8-2c27f295afcc"
   // const { currentUser } = useAuth();
   // const uid = currentUser.uid;
@@ -90,13 +89,14 @@ export default function MyWall(){
     firebase.database().ref(uid).on('value', snapshot => {
       const urls_data = Object.keys(snapshot.val()['feeds']).map((key) =>{
           return [snapshot.val()['feeds'][key], key]
-      }).slice(-23)
-      if(urls_data.length !== 23){
-        console.log("true")
+      })
+      while(urls_data.length < 17){
+        urls_data.push(null)
       }
       setUrls(urls_data)
     })
   }, [])
+  
   console.log(urls.length)
   useEffect(() => {
       if (file == null) 
@@ -124,6 +124,7 @@ export default function MyWall(){
         })
         setProgress(0)
         setfile(null)
+        setUrls([])
         alert("Image has successfully uploaded!")
       })
   }, [file])
@@ -160,10 +161,9 @@ export default function MyWall(){
                        { value === null ? 
                         (
                           <Grid item>
-                            <div className= {classes.textUnderCircle}>
+                            <div style = {{display: 'flex',  justifyContent:'center', alignItems:'center', paddingLeft: 15, paddingRight: 15}}>
                               <Avatar style={{ height: '100px', width: '100px' }} alt="" src= {white_plate}/>
                             </div>
-                            <div className = {classes.textUnderCircle}> {emtyStr} </div>
                           </Grid>
                         ) 
                         : 
