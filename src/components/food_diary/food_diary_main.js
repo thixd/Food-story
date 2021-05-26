@@ -194,7 +194,7 @@ function DiaryOverlay(selectedImage){
     const history = useHistory()
     function share(){
         //do_something
-
+        history.push('/writepost')
         history.push({
             pathname:'/writepost',
             state: {src: selectedImage.src, name: uid}
