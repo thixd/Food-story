@@ -38,13 +38,13 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 40,
     paddingTop: 50,
     paddingBottom: 130,
-    paddingLeft: 50,
+    paddingLeft: 30,
     paddingRight: 0,
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent:'center',
     backgroundColor: '#FCECC7',
-    width: 1500,
+    width: 1100,
     height: 500,
   },
   textUnderCircle: {
@@ -117,6 +117,10 @@ export default function MyWall(){
           firebase.database().ref('/feeds/'+feedkey+'image').set(value)
           firebase.database().ref(uid+'/feeds/'+feedkey+"/image").set(value)
           firebase.database().ref(uid+'/feeds/'+feedkey+"/createAt").set(currentdate.toDateString())
+          firebase.database().ref(uid+'/feeds/'+feedkey+"/origin").set("Korea")
+          firebase.database().ref(uid+'/feeds/'+feedkey+"/location").set("Daejeon")
+          //auto position
+          firebase.database().ref(uid+'/locations/Daejeon/'+feedkey).set(value)
         })
         setProgress(0)
         setfile(null)

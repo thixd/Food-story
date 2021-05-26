@@ -76,15 +76,14 @@ function Renderer(loc, org, setselectedImage){
     const [urls, seturls] = useState([])
     const [all, setall] = useState([])
     useEffect(() => {
-        if (urls.length !== 31){
+        if (urls.length !== 34){
             var tmp = urls.slice()
-            while (tmp.length!==31){
+            while (tmp.length!==34){
                 tmp.push(null)
             }
             seturls(tmp)
         }
     }, [urls])
-
 
     useEffect(() => {
         console.log(loc)
@@ -332,10 +331,10 @@ export default function DiaryMain(){
                 <AppNavBar/>
                 <div style={{display:"grid", gridTemplateColumns:"5fr 2fr 1fr 2fr 2fr", paddingTop:"10px", paddingBottom:"20px"}}>
                     <div></div>
-                    <div style={{textAlign:"center", fontSize:"40px"}}><ArrowLeftIcon/>May 2021<ArrowRightIcon/></div>
-                    <div style={{textAlign:'right', paddingTop:"7px", paddingRight: 10}}>Filter by: </div>
+                    <div style={{textAlign:"center", fontSize:"40px", paddingTop: 30}}><ArrowLeftIcon/>May 2021<ArrowRightIcon/></div>
+                    <div style={{textAlign:'right', paddingTop:"7px", paddingRight: 20}}>Filter by: </div>
                     <div style={{paddingRight: 20}}>{LocSelect(setloc)}</div>
-                    <div>{OrgSelect(setorg)}</div>
+                    <div style={{paddingRight: 20}}>{OrgSelect(setorg)}</div>
                 </div>
 
                 <div className="container">

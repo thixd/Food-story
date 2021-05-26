@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
     justifyContent:'center',
     // backgroundColor: '#FCECC7',
-    width: 1500,
+    width: 1100,
     height: 100,
   },
   textUnderCircle: {
