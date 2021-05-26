@@ -2,8 +2,7 @@ import React, {useState, useEffect, Component} from 'react';
 import Grid from '@material-ui/core/Grid';
 import AppNavBar from '../../utils/app_bar'
 import firebase from '../../firebase'
-import { Redirect, useHistory, withRouter } from 'react-router-dom';
-
+import { Redirect, Link } from 'react-router-dom';
 
 const imageBox = {
 	border: 1,
@@ -186,7 +185,9 @@ class SharingPage extends Component {
                             <form onSubmit = {this.uploadPost} ref={el => this.myFormRef = el}>
                                 <input id = "userInput" onChange = {this.updatePost} style = {inputTextArea}  type = "text" value = {this.state.userCmt} placeholder = "Write a public post..."/>
                                 <br></br>
-                                <button type = "submit">Post</button>
+                                <Link to="/sns">
+                                    <button type = "submit">Post</button>
+                                </Link>
                             </form>
                         </Grid>
                     </Grid>
