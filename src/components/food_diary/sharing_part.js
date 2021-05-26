@@ -155,7 +155,7 @@ class SharingPage extends Component {
             firebase.database().ref('Feeds/' + feedKey).child('hashtags').push(newHashTag[i])
         }
         firebase.database().ref('Feeds/' + feedKey).child('time').set(this.state.time)
-        return <Redirect to = '/sns'/>
+        // return <Redirect to = '/sns'/>
     }
     updatePost = (event) => {
 		this.setState({text: event.target.value});
@@ -185,8 +185,9 @@ class SharingPage extends Component {
                             <form onSubmit = {this.uploadPost} ref={el => this.myFormRef = el}>
                                 <input id = "userInput" onChange = {this.updatePost} style = {inputTextArea}  type = "text" value = {this.state.userCmt} placeholder = "Write a public post..."/>
                                 <br></br>
+                                <br></br>
                                 <Link to="/sns">
-                                    <button type = "submit">Post</button>
+                                    <button type = "submit" style = {{alignSelf: "center", width: 700, height: 25, backgroundColor: '#F8F8F8'}}>Post</button>
                                 </Link>
                             </form>
                         </Grid>
