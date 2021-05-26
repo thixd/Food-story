@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Avatar from '@material-ui/core/Avatar';
 import { Link } from 'react-router-dom';
-
+import "@fontsource/leckerli-one"
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -15,12 +15,16 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   title: {
+    paddingLeft: 20,
     color: '#F47B0A',
-    fontSize: 27,
+    // color: 'white',  
+    fontSize: 30,
+    fontFamily: "Leckerli One",
   },
   titleItem:{
     color: 'black',
-    padding: 20
+    fontSize: 16,
+    padding: 12
   }
 }));
 
@@ -29,11 +33,11 @@ export default function AppNavBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static"  style={{ background: 'transparent'}} >
+      <AppBar position="static"  style={{ background: '	#F8F8F8'}} >
         <Toolbar>
           <Link to="/home" style={{ textDecoration: 'none', flexGrow: 1}}>
             <Typography variant="h6" className={classes.title}>
-              Food story
+              foodstory
             </Typography>
           </Link>
 

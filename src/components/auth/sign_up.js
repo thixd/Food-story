@@ -43,24 +43,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignInSide() {
+export default function SignUpSide() {
   const classes = useStyles();
   const emailRef = useRef()
   const passwordRef = useRef()
-  const { login } = useAuth()
+  const passwordConfirmRef = useRef()
+  const { signup } = useAuth()
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const history = useHistory()
+
   async function handleSubmit(e) {
     e.preventDefault()
+
+    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
+      return setError("Passwords do not match")
+    }
 
     try {
       setError("")
       setLoading(true)
-      await login(emailRef.current.value, passwordRef.current.value)
-      history.push("/home")
+      await signup(emailRef.current.value, passwordRef.current.value)
+      history.push("/signin")
     } catch {
-      setError("Failed to log in")
+      setError("Failed to create an account")
     }
 
     setLoading(false)
@@ -101,6 +107,16 @@ export default function SignInSide() {
             id="password"
             autoComplete="current-password"
           />
+           <TextField
+            inputRef={passwordConfirmRef}
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            label="Confirm Password"
+            type="password"
+            id="passwordComfirm"
+          />
           <Button
             type="button"
             fullWidth
@@ -110,14 +126,14 @@ export default function SignInSide() {
             onClick = {handleSubmit}
             style = {{color: 'white', background: '#F47B0A'}}
           >
-            Sign In
+            Sign Up
           </Button>
           <Grid container>
             <Grid item xs>
             </Grid>
             <Grid item>
-              <Link to="/signup" variant="body2">
-                {"Don't have an account? Sign Up"}
+              <Link to="signin" variant="body2">
+                {"Already have an account? Sign In"}
               </Link>
             </Grid>
           </Grid>
