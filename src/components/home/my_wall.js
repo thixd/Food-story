@@ -88,11 +88,11 @@ export default function MyWall(){
     firebase.database().ref(uid).on('value', snapshot => {
       const urls_data = Object.keys(snapshot.val()['feeds']).map((key) =>{
           return [snapshot.val()['feeds'][key], key]
-      })
+      }).slice(-14)
       setUrls(urls_data)
     })
   }, [])
-
+ 
   useEffect(() => {
       if (file == null) 
         return
@@ -101,7 +101,9 @@ export default function MyWall(){
       const imgref = firebase.storage().ref().child(uid).child('images').child(feedkey)
       var uploadTask = imgref.put(file)
       uploadTask.on('state_changed', function(snapshot){
-        setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        var curProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log(curProgress);
+        setProgress(curProgress);
       }, function(error) {
         alert("Cannot upload!")
       }, function(){
@@ -113,7 +115,7 @@ export default function MyWall(){
         })
         setProgress(0)
         setfile(null)
-        // alert("file uploaded")
+        // alert("Image has successfully uploaded!")
       })
   }, [file])
 
