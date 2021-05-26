@@ -22,7 +22,7 @@ mapboxgl.accessToken = "pk.eyJ1Ijoic3Rhcm1wY2MiLCJhIjoiY2tvM25tN3prMDhkZTJvbm1nd
 
 //Sample variables for test
 const uid = "sample_uid"
-firebase.database().ref(uid +'/locations/Dajeon/-Ma49Ikizf3-0Km6ouME').set("https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/sample_uid%2Fimages%2F-Ma49Ikizf3-0Km6ouME?alt=media&token=55d3c26a-37ee-4de3-bab2-799d59a164e5")
+firebase.database().ref(uid +'/locations/Daejeon/-Ma49Ikizf3-0Km6ouME').set("https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/sample_uid%2Fimages%2F-Ma49Ikizf3-0Km6ouME?alt=media&token=55d3c26a-37ee-4de3-bab2-799d59a164e5")
 
 firebase.database().ref(uid +'/origins/Korean/-Ma49Ikizf3-0Km6ouME').set("https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/sample_uid%2Fimages%2F-Ma49Ikizf3-0Km6ouME?alt=media&token=55d3c26a-37ee-4de3-bab2-799d59a164e5")
 
@@ -37,11 +37,16 @@ const SelectionContext = createContext(null)
 function LocSelect(setter){
     const loadOptions = () => {
         return firebase.database().ref(uid+'/locations').once('value').then((snapshot => {
-            return Object.keys(snapshot.val()).map(map =>{
+            const locs = Object.keys(snapshot.val()).map(map =>{
                 return {value:map, label:map}
             })
+            return [
+                {label:"All", value:null},
+                ...locs
+            ]
         }))
     }
+
     function handleChange(e){
         setter(e["value"])
     }
@@ -51,9 +56,13 @@ function LocSelect(setter){
 function OrgSelect(setter){
     const loadOptions = () => {
         return firebase.database().ref(uid+'/origins').once('value').then((snapshot => {
-            return Object.keys(snapshot.val()).map(map =>{
+            const orgs = Object.keys(snapshot.val()).map(map =>{
                 return {value:map, label:map}
             })
+            return [
+                {label:"All", value:null},
+                ...orgs
+            ]
         }))
     }
     function handleChange(e){
@@ -65,6 +74,7 @@ function OrgSelect(setter){
 
 function Renderer(loc, org, setselectedImage){
     const [urls, seturls] = useState([])
+    const [all, setall] = useState([])
     useEffect(() => {
         if (urls.length !== 31){
             var tmp = urls.slice()
@@ -74,65 +84,51 @@ function Renderer(loc, org, setselectedImage){
             seturls(tmp)
         }
     }, [urls])
-    useEffect(() => {
-        firebase.database().ref(uid).on('value', snapshot => {
-        const maps = Object.keys(snapshot.val()['feeds']).map((key) =>{
-            return [snapshot.val()['feeds'][key], key]
-        })
-        if (maps.length !== 31){
-            var tmp = maps.slice()
-            while (tmp.length!==31){
-                tmp.push(null)
-            }
-        }
-        seturls(maps)
-        })
-    }, [])
-        // firebase.database().ref(uid).get().then((snapshot) =>{
-        //     if(typeof(snapshot.val()['feeds']) == "undefined")
-        //         return;
-        //     const maps = Object.keys(snapshot.val()['feeds']).map((key) =>{
-        //         return [snapshot.val()['feeds'][key]['image'], key]
-        //     })
-        //     if (maps.length !== 31){
-        //         var tmp = maps.slice()
-        //         while (tmp.length!==31){
-        //             tmp.push(null)
-        //         }
-        //     }
-        //     seturls(maps)
-        // })
-        
-    // }, [])
+
 
     useEffect(() => {
         console.log(loc)
         console.log(org)
-        if (loc!=null){
-            firebase.database().ref(uid).child('locations').child(loc).get().then((snapshot) =>{
-                const maps = Object.keys(snapshot.val()).map((key) => {
-                    return [snapshot.val()[key], key]
-                })
-                seturls(maps)
+        firebase.database().ref(uid).child('feeds').get().then(snapshot => {
+            const maps = Object.keys(snapshot.val()).map((key) =>{
+                return [snapshot.val()[key], key]
             })
-        }
-        if (org!=null){
-            firebase.database().ref(uid).child('origins').child(org).get().then((snapshot) =>{
-                const maps = Object.keys(snapshot.val()).map((key) => {
-                    return [snapshot.val()[key], key]
-                })
-                var tmp = urls.slice()
+            setall(maps)
+            seturls(maps)
+        }).then(()=>{
+            if (loc!=null){
                 var res = []
-                for (var i=0; i<maps.length;i++){
-                    for (var j=0; j<tmp.length; j++){
-                        console.log(maps)
-                        console.log(tmp)
-                        if (tmp[j]!==null && maps[i][0]===tmp[j][0]) res.push(maps[i])
+                var tmp = urls.slice()
+                for (var i=0; i< tmp.length; i++){
+                    if (tmp[i]!=null && tmp[i][0]['location']===loc){
+                        res.push(tmp[i])
                     }
                 }
                 seturls(res)
-            })
-        }
+                console.log(res)
+            }
+            var maps = []
+            var tmp = urls.slice()
+            var res = []
+            if (org!=null){
+                maps = []
+                for (var i=0; i< tmp.length; i++){
+                    if (tmp[i]!=null && tmp[i][0]['origin']===org){
+                        maps.push(tmp[i])
+                    }
+                }
+            }
+            else{
+                maps = all
+            }
+            for (var i=0; i<maps.length; i++){
+                for (var j=0; j<tmp.length; j++){
+                    if (tmp[j]!==null && maps[i][1]===tmp[j][1]) res.push(maps[i])
+                }
+            }
+            seturls(res)
+            console.log(res)
+        })
     }, [loc, org])
 
     function imageClick(e){
@@ -259,7 +255,6 @@ function Upload_file(file, setfile, setProgress){
         var uploadTask = imgref.put(file)
         uploadTask.on('state_changed', function(snapshot){
             var curProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log(curProgress);
             setProgress(curProgress);
         }, function(error) {
             alert("Cannot upload!")
