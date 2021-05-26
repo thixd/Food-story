@@ -13,7 +13,7 @@ const imageBox = {
 	alignItems: "center",
 	position: "relative",
 	display: "flex",
-	
+	overflow: "hidden"
 }
 const textBox = {
 	width: 600,
@@ -159,9 +159,15 @@ class SinglePostView extends Component{
 				post.setState({reaction: newReaction});
 			});
 			var newHashtags = []
-			snapshot.val().hashtags.forEach((childSnapShot) =>{
-				newHashtags.push(childSnapShot);
+			// console.log(snapshot.child('hashtags').val())
+			var cnt = 0
+			snapshot.child('hashtags').forEach((childSnapShot) =>{
+				cnt++
+				if(cnt==1)
+					return;
+				newHashtags.push(childSnapShot.val());
 			});
+			console.log(newHashtags)
 			newHashtags = newHashtags.map(hashtag => <HashTags name = {hashtag}/>)
 			post.setState({hashtags: newHashtags});
 		});
@@ -231,7 +237,7 @@ class SinglePostView extends Component{
 		}
 	}
 	render(){
-		console.log(this.state.time);
+		// console.log(this.state.hashtags);
 		if(this.state.getData == false) {		
 			this.crawlData()
 		}
@@ -273,6 +279,7 @@ class SinglePostView extends Component{
 						{/*Displaying hashtag from the user*/}
 						<Grid container style = {displayText}>
 							<Grid item style = {textBox}>
+							<p style = {{fontWeight: "bold"}}>Hashtags</p>
 								<p>{localState.hashtags}</p>
 							</Grid>
 						</Grid>
