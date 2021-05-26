@@ -117,6 +117,10 @@ export default function MyWall(){
           firebase.database().ref('/feeds/'+feedkey+'image').set(value)
           firebase.database().ref(uid+'/feeds/'+feedkey+"/image").set(value)
           firebase.database().ref(uid+'/feeds/'+feedkey+"/createAt").set(currentdate.toDateString())
+          firebase.database().ref(uid+'/feeds/'+feedkey+"/origin").set("Korea")
+          firebase.database().ref(uid+'/feeds/'+feedkey+"/location").set("Daejeon")
+          //auto position
+          firebase.database().ref(uid+'/locations/Daejeon/'+feedkey).set(value)
         })
         setProgress(0)
         setfile(null)

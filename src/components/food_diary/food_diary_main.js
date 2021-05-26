@@ -22,7 +22,7 @@ mapboxgl.accessToken = "pk.eyJ1Ijoic3Rhcm1wY2MiLCJhIjoiY2tvM25tN3prMDhkZTJvbm1nd
 
 //Sample variables for test
 const uid = "sample_uid"
-firebase.database().ref(uid +'/locations/Dajeon/-Ma49Ikizf3-0Km6ouME').set("https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/sample_uid%2Fimages%2F-Ma49Ikizf3-0Km6ouME?alt=media&token=55d3c26a-37ee-4de3-bab2-799d59a164e5")
+firebase.database().ref(uid +'/locations/Daejeon/-Ma49Ikizf3-0Km6ouME').set("https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/sample_uid%2Fimages%2F-Ma49Ikizf3-0Km6ouME?alt=media&token=55d3c26a-37ee-4de3-bab2-799d59a164e5")
 
 firebase.database().ref(uid +'/origins/Korean/-Ma49Ikizf3-0Km6ouME').set("https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/sample_uid%2Fimages%2F-Ma49Ikizf3-0Km6ouME?alt=media&token=55d3c26a-37ee-4de3-bab2-799d59a164e5")
 
@@ -337,10 +337,10 @@ export default function DiaryMain(){
                 <AppNavBar/>
                 <div style={{display:"grid", gridTemplateColumns:"5fr 2fr 1fr 2fr 2fr", paddingTop:"10px", paddingBottom:"20px"}}>
                     <div></div>
-                    <div style={{textAlign:"center", fontSize:"40px"}}><ArrowLeftIcon/>May 2021<ArrowRightIcon/></div>
-                    <div style={{textAlign:'right', paddingTop:"7px", paddingRight: 10}}>Filter by: </div>
+                    <div style={{textAlign:"center", fontSize:"40px", paddingTop: 30}}><ArrowLeftIcon/>May 2021<ArrowRightIcon/></div>
+                    <div style={{textAlign:'right', paddingTop:"7px", paddingRight: 20}}>Filter by: </div>
                     <div style={{paddingRight: 20}}>{LocSelect(setloc)}</div>
-                    <div>{OrgSelect(setorg)}</div>
+                    <div style={{paddingRight: 20}}>{OrgSelect(setorg)}</div>
                 </div>
 
                 <div className="container">
