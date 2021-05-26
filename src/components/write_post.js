@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import MUIRichTextEditor from 'mui-rte'
 import Button from '@material-ui/core/Button';
+import { convertToRaw } from 'draft-js'
 
 const useStyles = makeStyles((theme) => ({
   imageBox: {
@@ -101,18 +102,20 @@ export default function WritePost(){
   var ava = <img width = {30} height = {30} src = 'https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c'></img>
   const classes = useStyles();
   var date = new Date().toDateString();
-  const save = (data) => {
-    console.log(data);
-  };
+  const [value, setValue] = useState('')
+  const onRTEChange = event => {
+    const plainText = event.getCurrentContent().getPlainText() // for plain text
+    const rteContent = convertToRaw(event.getCurrentContent()) // for rte content with text formating
+    setValue(plainText) // store your rteContent to state
+  }
+  console.log(value)
   return(
     <>
       <AppNavBar/>
 
-      
       {/* <div style = {{display: 'flex',  justifyContent:'center', alignItems:'center', paddingTop: 30, borderStyle:'solid'}}> */}
       <div style = {{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
       <div className = {classes.grid}>
-          <Button style = {{paddingLeft:305}}>Public the post</Button>
           <Grid>
               <Grid item className={classes.post}>
                 {/*Displaying the Image of the post*/}
@@ -135,7 +138,7 @@ export default function WritePost(){
                 <MUIRichTextEditor
                   label="Type to start sharing ..."
                   controls={['title', 'bold', 'italic']}
-                  onSave={save}
+                  onChange={onRTEChange}
                 />,
               </Grid>
             </Grid>
