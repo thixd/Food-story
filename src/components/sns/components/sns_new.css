@@ -2,9 +2,10 @@
 .feed .feed_blank {
   text-align: center;  
   font-size: 18px;
-  color: #777;
+  color: #D0D0D0;
   background-color: #eee;
   padding: 50px 0px 50px 0px;
+  border-radius: 10px;
 }
 
 .feed .feed_blank:hover {

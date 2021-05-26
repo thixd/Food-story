@@ -66,9 +66,9 @@ function OrgSelect(setter){
 function Renderer(loc, org, setselectedImage){
     const [urls, seturls] = useState([])
     useEffect(() => {
-        if (urls.length !== 31){
+        if (urls.length !== 34){
             var tmp = urls.slice()
-            while (tmp.length!==31){
+            while (tmp.length!==34){
                 tmp.push(null)
             }
             seturls(tmp)
@@ -79,9 +79,9 @@ function Renderer(loc, org, setselectedImage){
         const maps = Object.keys(snapshot.val()['feeds']).map((key) =>{
             return [snapshot.val()['feeds'][key], key]
         })
-        if (maps.length !== 31){
+        if (maps.length !== 34){
             var tmp = maps.slice()
-            while (tmp.length!==31){
+            while (tmp.length!==34){
                 tmp.push(null)
             }
         }
