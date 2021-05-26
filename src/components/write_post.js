@@ -101,21 +101,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function LinearProgressWithLabel(props) {
-  return (
-    <Box style = {{width : 1050}} display="flex" justifyContent="center">
-      <Box width="100%" mr={1}>
-        <LinearProgress 
-          variant="determinate" {...props} />
-      </Box>
-      <Box minWidth={35}>
-        <Typography variant="body2" color="textSecondary">{`${Math.round(
-          props.value,
-        )}%`}</Typography>
-      </Box>
-    </Box>
-  );
-}
 
 export default function WritePost(){
   const uid = 'sample uid'
@@ -125,18 +110,47 @@ export default function WritePost(){
   const [value, setValue] = useState('')
   const [file, setfile] = useState(null)
   const [progress, setProgress] = useState(0)
+  const [getData, setGetData] = useState(null)
   const onRTEChange = event => {
     const plainText = event.getCurrentContent().getPlainText()
     setValue(plainText) // store your rteContent to state
   }
+  var url = null;
   var white_plate = "https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2F41743.jpg?alt=media&token=a149adac-57e7-4a82-afa4-19af9ffa65f6"
 
   function handleSubmit(){
-
+      var info = {
+        image: file,
+        text: "",
+        user: uid,
+        comments: [{"name": "null", "text": "null"}],
+        reaction: [{"0": "null"}],
+        isPrivate: false,
+        location: "Daejon",
+        origin: "Korea",
+        lat: 0,
+        lng: 0,
+        hashtags: {"0": "null"},
+        time: "1min",
+    }
+    var feedkey_list = String(firebase.database().ref('Feeds/').push())
+    feedkey_list = feedkey_list.split('/')
+    var feedKey = feedkey_list[feedkey_list.length -1]
+    firebase.database().ref('Feeds/' + feedKey).child('image').set(info.image)
+    firebase.database().ref('Feeds/' + feedKey).child('text').set(info.text)
+    firebase.database().ref('Feeds/' + feedKey).child('user').set(info.user)
+    firebase.database().ref('Feeds/' + feedKey).child('comments').set(info.comments)
+    firebase.database().ref('Feeds/' + feedKey).child('reaction').set(info.reaction)
+    firebase.database().ref('Feeds/' + feedKey).child('isPrivate').set(info.isPrivate)
+    firebase.database().ref('Feeds/' + feedKey).child('location').set(info.location)
+    firebase.database().ref('Feeds/' + feedKey).child('origin').set(info.origin)
+    firebase.database().ref('Feeds/' + feedKey).child('lat').set(info.lat)
+    firebase.database().ref('Feeds/' + feedKey).child('lng').set(info.lng)
   }
   console.log(value)
   useEffect(() => {
-    if (file == null) 
+    console.log(file, getData)
+    if (file == null || getData == 1) 
       return
     const feedkey_list = String(firebase.database().ref('/feeds/').push()).split('/')
     const feedkey = feedkey_list[feedkey_list.length -1]
@@ -158,10 +172,11 @@ export default function WritePost(){
         firebase.database().ref(uid+'/feeds/'+feedkey+"/location").set("Daejeon")
         //auto position
         firebase.database().ref(uid+'/locations/Daejeon/'+feedkey).set(value)
+        console.log(value);
+        setGetData(value)
+        console.log(url)
+        // setGetData(1)
       })
-      setProgress(0)
-      setfile(null)
-      alert("Image has successfully uploaded!")
     })
 }, [file])
 
@@ -195,14 +210,14 @@ const handleUploadFile = (e) => {
                           //  </Button>
                         )
                       : 
-                        (<img className={classes.singleImage} src = {file}/>) 
+                        (<img className={classes.singleImage} src = {getData}/>) 
                     }
                   </Grid>
-                  <div className={classes.textUnderCircle}>
+                  {/* <div className={classes.textUnderCircle}>
                     { file == null ? (<div></div>) : (
                       <LinearProgressWithLabel value={progress} />
                     )}
-                  </div>		
+                  </div>		 */}
                 </Grid>
                 {/*Displayign user ID, reaction count, comment count*/}
                 <Grid container className={classes.displayUser}>
