@@ -157,7 +157,7 @@ export default function FriendStory(){
                     </Button>
                   </Link>
                   
-                  <div className = {classes.textUnderCircleAdd}>Your story</div>
+                  <div className = {classes.textUnderCircleAdd}>Share your story</div>
                   </Grid>
                   {urls.map((value) => (
                     <Grid key={value} item>
