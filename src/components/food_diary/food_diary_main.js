@@ -22,9 +22,9 @@ mapboxgl.accessToken = "pk.eyJ1Ijoic3Rhcm1wY2MiLCJhIjoiY2tvM25tN3prMDhkZTJvbm1nd
 
 //Sample variables for test
 const uid = "sample_uid"
-firebase.database().ref(uid +'/locations/Daejeon/-Ma49Ikizf3-0Km6ouME').set("https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/sample_uid%2Fimages%2F-Ma49Ikizf3-0Km6ouME?alt=media&token=55d3c26a-37ee-4de3-bab2-799d59a164e5")
+firebase.database().ref(uid +'/locations/Daejeon/').set("Daejeon")
 
-firebase.database().ref(uid +'/origins/Korean/-Ma49Ikizf3-0Km6ouME').set("https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/sample_uid%2Fimages%2F-Ma49Ikizf3-0Km6ouME?alt=media&token=55d3c26a-37ee-4de3-bab2-799d59a164e5")
+firebase.database().ref(uid +'/origins/Korea/').set("Korea")
 
 
 
@@ -74,7 +74,6 @@ function OrgSelect(setter){
 
 function Renderer(loc, org, setselectedImage){
     const [urls, seturls] = useState([])
-    const [all, setall] = useState([])
     useEffect(() => {
         if (urls.length !== 34){
             var tmp = urls.slice()
@@ -89,31 +88,29 @@ function Renderer(loc, org, setselectedImage){
         console.log(loc)
         console.log(org)
         firebase.database().ref(uid).child('feeds').get().then(snapshot => {
-            const maps = Object.keys(snapshot.val()).map((key) =>{
+            return Object.keys(snapshot.val()).map((key) =>{
                 return [snapshot.val()[key], key]
             })
-            setall(maps)
-            seturls(maps)
-        }).then(()=>{
+        }).then((all)=>{
+            console.log(all)
+
+            var loc_filtered = []
             if (loc!=null){
-                var res = []
-                var tmp = urls.slice()
-                for (var i=0; i< tmp.length; i++){
-                    if (tmp[i]!=null && tmp[i][0]['location']===loc){
-                        res.push(tmp[i])
+                for (var i=0; i< all.length; i++){
+                    if (all[i]!=null && all[i][0]['location']===loc){
+                        loc_filtered.push(all[i])
                     }
                 }
-                seturls(res)
-                console.log(res)
+            }
+            else{
+                loc_filtered = all
             }
             var maps = []
-            var tmp = urls.slice()
-            var res = []
+            const res = []
             if (org!=null){
-                maps = []
-                for (var i=0; i< tmp.length; i++){
-                    if (tmp[i]!=null && tmp[i][0]['origin']===org){
-                        maps.push(tmp[i])
+                for (var i=0; i< loc_filtered.length; i++){
+                    if (loc_filtered[i]!==null && loc_filtered[i][0]['origin']===org){
+                        maps.push(loc_filtered[i])
                     }
                 }
             }
@@ -121,12 +118,17 @@ function Renderer(loc, org, setselectedImage){
                 maps = all
             }
             for (var i=0; i<maps.length; i++){
-                for (var j=0; j<tmp.length; j++){
-                    if (tmp[j]!==null && maps[i][1]===tmp[j][1]) res.push(maps[i])
+                for (var j=0; j<loc_filtered.length; j++){
+                    if (loc_filtered[j]!==null && maps[i][1]===loc_filtered[j][1]) res.push(maps[i])
                 }
             }
-            seturls(res)
+            console.log(loc_filtered)
+            console.log(maps)
             console.log(res)
+            seturls(res)
+            console.log(urls)
+
+
         })
     }, [loc, org])
 
@@ -202,7 +204,7 @@ function DiaryOverlay(selectedImage){
     }
     return (
         <div id="diary_overlay" style={{display:"none"}} ref={overlayref}>
-            <Button id="overlay_share" component="span" onClick={share}
+            <Button id="overlay_share" component="span" onClick={share} style = {{color: 'white', background: '#F47B0A'}} 
                 variant="contained" startIcon={<ShareIcon/>}>
                 Share
             </Button>
