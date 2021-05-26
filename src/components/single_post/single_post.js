@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import firebase from '../../firebase'
 import SingleComment from './single_comment'
 import { useHistory, withRouter } from 'react-router-dom';
+import { useAuth } from '../../contexts/auth_context'
 /* --------------------------------------- Style ----------------------------------------*/
 const imageBox = {
 	border: 1,
@@ -104,11 +105,13 @@ function HashTags(props) {
 }
 
 // export default HashTags;
+//TODO: need to change curUser
 
-var curUser = "current_uid4";
 var pending = "Write a public comment...";
 var unliked, liked, icnComment;
 var ava;
+// const { currentUser } = useAuth();
+var curUser = "sample_uid";
 ava = <img width = {30} height = {30} src = 'https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c'></img>
 liked = <img  width =  {20}  height = {20}  src = 'https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Flike_icon_new.png?alt=media&token=0caa33ca-f069-4a37-a405-5aad7d86b5b6'/>;
 icnComment = <img width =  {20}  height = {20} src = 'https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fcomment_icon_new.png?alt=media&token=bb9deb74-7333-49c5-ac5b-5652a2976973'/>;
@@ -118,6 +121,7 @@ class SinglePostView extends Component{
 	constructor(props) {
 		super(props)
 		console.log(this.props)
+		
 		this.state = {
 			BoxProps: this.props.location.state.BoxProps,
 			getData: false,
