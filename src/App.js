@@ -18,6 +18,7 @@ function App() {
       <AuthProvider>
         <Switch>
             <Route exact path="/" component={HomePage} />
+            <Route path="/home" component={HomePage} />
             <Route path="/diary" component={DiaryMain} />
             <Route path="/sns" component={SnsMain} />
             <Route path="/user" component={SnsUser} />
