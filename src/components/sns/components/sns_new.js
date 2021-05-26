@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./sns_feed.css";
 import "./sns_new.css";
 import firebase from "../../../firebase";
+import WritePost from "../../write_post";
 
 export default function SnsNew({history, uid}){
   const [author, setAuthor] = useState({});
@@ -15,7 +16,7 @@ export default function SnsNew({history, uid}){
 
   // share handler
   function shareHandler() {
-    alert("to be connected");
+    return <WritePost/>
   }
 
   return (

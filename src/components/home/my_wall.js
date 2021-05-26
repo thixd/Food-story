@@ -37,21 +37,27 @@ const useStyles = makeStyles((theme) => ({
   grid: {
     borderRadius: 40,
     paddingTop: 50,
-    paddingBottom: 80,
-    paddingLeft: 50,
+    paddingBottom: 130,
+    paddingLeft: 30,
     paddingRight: 0,
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent:'center',
     backgroundColor: '#FCECC7',
-    width: 1000,
-    height: 400,
+    width: 1100,
+    height: 500,
   },
   textUnderCircle: {
+    paddingTop: 7,
     display: 'flex',  
     justifyContent:'center', 
     alignItems:'center'
   },
+  textUnderCircleAdd: {
+    display: 'flex',  
+    justifyContent:'center', 
+    alignItems:'center'
+  }
 }));
 
 function LinearProgressWithLabel(props) {
@@ -76,17 +82,22 @@ export default function MyWall(){
   const [urls, setUrls] = useState([])
   const [file, setfile] = useState(null)
   const [progress, setProgress] = useState(0)
+  const emtyStr = "              "
+  var white_plate = "https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fwhite_plate.jpg?alt=media&token=4ab38285-4bd3-4ce9-84b8-2c27f295afcc"
   // const { currentUser } = useAuth();
   // const uid = currentUser.uid;
   useEffect(() => {
     firebase.database().ref(uid).on('value', snapshot => {
       const urls_data = Object.keys(snapshot.val()['feeds']).map((key) =>{
           return [snapshot.val()['feeds'][key], key]
-      })
+      }).slice(-23)
+      if(urls_data.length !== 23){
+        console.log("true")
+      }
       setUrls(urls_data)
     })
   }, [])
-  // console.log(urls[0][0]['image'])
+  console.log(urls.length)
   useEffect(() => {
       if (file == null) 
         return
@@ -95,7 +106,9 @@ export default function MyWall(){
       const imgref = firebase.storage().ref().child(uid).child('images').child(feedkey)
       var uploadTask = imgref.put(file)
       uploadTask.on('state_changed', function(snapshot){
-        setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        var curProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log(curProgress);
+        setProgress(curProgress);
       }, function(error) {
         alert("Cannot upload!")
       }, function(){
@@ -104,10 +117,14 @@ export default function MyWall(){
           firebase.database().ref('/feeds/'+feedkey+'image').set(value)
           firebase.database().ref(uid+'/feeds/'+feedkey+"/image").set(value)
           firebase.database().ref(uid+'/feeds/'+feedkey+"/createAt").set(currentdate.toDateString())
+          firebase.database().ref(uid+'/feeds/'+feedkey+"/origin").set("Korea")
+          firebase.database().ref(uid+'/feeds/'+feedkey+"/location").set("Daejeon")
+          //auto position
+          firebase.database().ref(uid+'/locations/Daejeon/'+feedkey).set(value)
         })
         setProgress(0)
         setfile(null)
-        alert("file uploaded")
+        alert("Image has successfully uploaded!")
       })
   }, [file])
 
@@ -130,22 +147,36 @@ export default function MyWall(){
             <Grid item xs={12}>
               <Grid container justify="left" spacing={7} >
                   <Grid key={0} item style={{}}>
-                    <Button component="label">
+                    <Button component="label" style = {{paddingLeft: 18}}>
                       <input type="file" onChange={handleUploadFile} hidden/>
                       <Avatar style={{ height: '90px', width: '90px', backgroundColor: '#E4C281'}}>
                         <AddAPhotoIcon />
                       </Avatar>
                     </Button>
-                    
-                    <div className = {classes.textUnderCircle} >Add diary</div>
-                    </Grid>
+                    <div className = {classes.textUnderCircleAdd} >Add diary</div>
+                  </Grid>
                   {urls.map((value) => (
                     <Grid key={value} item>
-                        <div>
-                          <Avatar style={{ height: '90px', width: '90px' }} alt="" src= {value[0]['image']} />
-                        </div>
-                        <div className = {classes.textUnderCircle}> {value[0]['createAt']} </div>
-                      </Grid>
+                       { value === null ? 
+                        (
+                          <Grid item>
+                            <div className= {classes.textUnderCircle}>
+                              <Avatar style={{ height: '100px', width: '100px' }} alt="" src= {white_plate}/>
+                            </div>
+                            <div className = {classes.textUnderCircle}> {emtyStr} </div>
+                          </Grid>
+                        ) 
+                        : 
+                        (
+                          <Grid item>
+                          <div className= {classes.textUnderCircle}>
+                            <Avatar style={{ height: '90px', width: '90px' }} alt="" src= {value[0]['image']}/>
+                          </div>
+                          <div className = {classes.textUnderCircle}> {value[0]['createAt']} </div>
+                          </Grid>
+                        )
+                       }
+                    </Grid> 
                     ))}
               </Grid>
             </Grid>
@@ -161,4 +192,3 @@ export default function MyWall(){
     </>
   )
 }
-

@@ -10,7 +10,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import firebase from '../../firebase'
-
+import { Link } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -44,10 +44,16 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
     justifyContent:'center',
     // backgroundColor: '#FCECC7',
-    width: 1000,
+    width: 1100,
     height: 100,
   },
   textUnderCircle: {
+    paddingTop: 13,
+    display: 'flex',  
+    justifyContent:'center', 
+    alignItems:'center'
+  },
+  textUnderCircleAdd: {
     display: 'flex',  
     justifyContent:'center', 
     alignItems:'center'
@@ -96,7 +102,7 @@ export default function FriendStory(){
   useEffect(() => {
       if (file == null) 
         return
-      const feedkey_list = String(firebase.database().ref('/feeds/').push()).split('/')
+      const feedkey_list = String(firebase.database().ref('/Feeds/').push()).split('/')
       const feedkey = feedkey_list[feedkey_list.length -1]
       const imgref = firebase.storage().ref().child(uid).child('images').child(feedkey)
       var uploadTask = imgref.put(file)
@@ -107,7 +113,7 @@ export default function FriendStory(){
       }, function(){
         var currentdate = new Date();
         firebase.storage().ref().child(uid).child('images').child(feedkey).getDownloadURL().then((value) => {
-          firebase.database().ref('/feeds/'+feedkey+'image').set(value)
+          firebase.database().ref('/Feeds/'+feedkey+'/image').set(value)
           firebase.database().ref(uid+'/feeds/'+feedkey+"/image").set(value)
           firebase.database().ref(uid+'/feeds/'+feedkey+"/createAt").set(currentdate.toDateString())
         })
@@ -135,21 +141,23 @@ export default function FriendStory(){
             <Grid item xs={12}>
               <Grid container justify="left" spacing={7} >
                 <Grid key={0} item style={{}}>
-                  <Button component="label">
-                    <input type="file" onChange={handleUploadFile} hidden/>
-                    <Badge
-                      overlap="circle"
-                      anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'right',
-                      }}
-                      badgeContent={<SmallAvatar> <AddCircleIcon/> </SmallAvatar>}
-                      >
-                          <Avatar style={{ height: '90px', width: '90px' }} alt="" src="" />
-                      </Badge>
-                  </Button>
-                    
-                  <div className = {classes.textUnderCircle}>Your story</div>
+                  <Link to='/writepost'>
+                    <Button component="label">
+                      {/* <input type="file" onChange={handleUploadFile} hidden/> */}
+                      <Badge
+                        overlap="circle"
+                        anchorOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'right',
+                        }}
+                        badgeContent={<SmallAvatar> <AddCircleIcon/> </SmallAvatar>}
+                        >
+                            <Avatar style={{ height: '90px', width: '90px' }} alt="" src="" />
+                        </Badge>
+                    </Button>
+                  </Link>
+                  
+                  <div className = {classes.textUnderCircleAdd}>Your story</div>
                   </Grid>
                   {urls.map((value) => (
                     <Grid key={value} item>
