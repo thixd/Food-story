@@ -121,7 +121,6 @@ class SinglePostView extends Component{
 	constructor(props) {
 		super(props)
 		console.log(this.props)
-		
 		this.state = {
 			BoxProps: this.props.location.state.BoxProps,
 			getData: false,

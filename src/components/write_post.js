@@ -6,10 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import MUIRichTextEditor from 'mui-rte'
 import Button from '@material-ui/core/Button';
-import { convertToRaw } from 'draft-js'
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+
 
 const useStyles = makeStyles((theme) => ({
   imageBox: {
@@ -85,11 +82,6 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: "underline",
   },
   grid: {
-    // display: 'flex',
-    // flexWrap: 'wrap',
-    // justifyContent:'center',
-    // backgroundColor: '#FCECC7',
-    // alignItems:'center',
     borderWidth: 1,
     borderColor: '#d5d5d5',
     width: 800,
@@ -202,22 +194,11 @@ const handleUploadFile = (e) => {
                               <input type="file" onChange={handleUploadFile} hidden/>
                               <img  style = {{width: 400, height: 400, position: "relative",}} src = {white_plate}/>
                             </Button>
-                          //    <Button component="label" style = {{paddingLeft: 18}}>
-                          //    <input type="file" onChange={handleUploadFile} hidden/>
-                          //    <Avatar style={{ height: '90px', width: '90px', backgroundColor: '#E4C281'}}>
-                          //      <AddAPhotoIcon />
-                          //    </Avatar>
-                          //  </Button>
                         )
                       : 
                         (<img className={classes.singleImage} src = {getData}/>) 
                     }
                   </Grid>
-                  {/* <div className={classes.textUnderCircle}>
-                    { file == null ? (<div></div>) : (
-                      <LinearProgressWithLabel value={progress} />
-                    )}
-                  </div>		 */}
                 </Grid>
                 {/*Displayign user ID, reaction count, comment count*/}
                 <Grid container className={classes.displayUser}>
