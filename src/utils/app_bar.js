@@ -61,7 +61,7 @@ export default function AppNavBar() {
 
           <Link to="/user" style={{ textDecoration: 'none'}}>
             <IconButton> 
-              <Avatar alt="Remy Sharp" src="https://img-premium.flaticon.com/png/512/236/236831.png?token=exp=1621060191~hmac=921d3a4cda5180a6a4463e3cd05eb691" />
+              <Avatar alt="Foodie" src="https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c" />
             </IconButton>
           </Link>
 

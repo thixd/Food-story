@@ -10,7 +10,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import firebase from '../../firebase'
-
+import { Link } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -141,20 +141,22 @@ export default function FriendStory(){
             <Grid item xs={12}>
               <Grid container justify="left" spacing={7} >
                 <Grid key={0} item style={{}}>
-                  <Button component="label">
-                    <input type="file" onChange={handleUploadFile} hidden/>
-                    <Badge
-                      overlap="circle"
-                      anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'right',
-                      }}
-                      badgeContent={<SmallAvatar> <AddCircleIcon/> </SmallAvatar>}
-                      >
-                          <Avatar style={{ height: '90px', width: '90px' }} alt="" src="" />
-                      </Badge>
-                  </Button>
-                    
+                  <Link to='/writepost'>
+                    <Button component="label">
+                      {/* <input type="file" onChange={handleUploadFile} hidden/> */}
+                      <Badge
+                        overlap="circle"
+                        anchorOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'right',
+                        }}
+                        badgeContent={<SmallAvatar> <AddCircleIcon/> </SmallAvatar>}
+                        >
+                            <Avatar style={{ height: '90px', width: '90px' }} alt="" src="" />
+                        </Badge>
+                    </Button>
+                  </Link>
+                  
                   <div className = {classes.textUnderCircleAdd}>Your story</div>
                   </Grid>
                   {urls.map((value) => (

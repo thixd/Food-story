@@ -11,6 +11,7 @@ import RestaurantReview from './components/resreview/restaurant_review.js';
 import SinglePostView from './components/single_post/single_post.js';
 import { useHistory, withRouter } from 'react-router-dom';
 import SharingPage from './components/food_diary/sharing_part';
+import WritePost from './components/write_post';
 
 
 function App() {
@@ -29,7 +30,7 @@ function App() {
             <Route path = "/restaurant-review" component = {RestaurantReview}/>
             <Route path = "/sharing-post" component = {SharingPage}/>
             <Route path="/signin" component={SignInSide} />
-            
+            <Route path="/writepost" component={WritePost}/>
         </Switch>
       </AuthProvider>
     </Router>
