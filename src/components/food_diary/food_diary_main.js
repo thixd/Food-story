@@ -163,32 +163,7 @@ function Renderer(loc, org, setselectedImage){
 
 var curUser = "testingUser";
 
-class SharingOverlay extends Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            image: this.props.link,
-            user: curUser,
-            comments: [{"name": "null", "text": "null"}],
-            reactions: {"0": "null"},
-            isPrivate: true,
-            location: "Daejon",
-            origin: "Origin",
-            lat: 0,
-            lng: 0,
-            hashtags: {"0": "null"},
-            text: "",
-            time: "1min",
-            getData: false,
-        }
-    }
-    render() {
-        return(
-            <img id="overlay_image" alt=""></img>
-        )
-    }
 
-}
 
 
 function DiaryOverlay(selectedImage){
@@ -221,9 +196,9 @@ function DiaryOverlay(selectedImage){
     const history = useHistory()
     function share(){
         //do_something
-
+        history.push('/writepost')
         history.push({
-            pathname:'/sharing-post',
+            pathname:'/writepost',
             state: {src: selectedImage.src, name: uid}
         })
     }

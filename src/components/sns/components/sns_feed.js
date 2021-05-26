@@ -21,7 +21,7 @@ function HashTags(props) {
 	)
 }
 
-
+var curUser = "sample_uid";
 
 export default function SnsFeed({history, feedId, feedInfo}){
   // Whether range dropdown is opened
@@ -44,7 +44,7 @@ export default function SnsFeed({history, feedId, feedInfo}){
   }, feedInfo));
   const [author, setAuthor] = useState({
     profile: 'https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c',
-    nickname: "author"
+    nickname: "sample_uid"
   });
   // console.log("this", author)
   // Snapshot setting
@@ -111,7 +111,6 @@ export default function SnsFeed({history, feedId, feedInfo}){
       }
     });
   }
-
   // Other images
   const privateIcon = "https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fprivate_icon.png?alt=media&token=57b523de-f0ae-4877-ae30-5d5374d16cc3";
   const publicIcon = "https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fpublic_icon.png?alt=media&token=4eb66ae0-36b3-4708-a42e-cad5ed2b32d8";
@@ -139,49 +138,54 @@ export default function SnsFeed({history, feedId, feedInfo}){
             </span>
           </div>
         </div>
-        <div className="feed_range">
-          {feed.isPrivate === true ? (
-            <div className="feed_range_selected"
-              onClick={() => setRangeOpened(!rangeOpened)} >
-              <img className="feed_range_image" 
-                src={privateIcon}
-                alt="private"
-              />
-              <span>Private</span>
-              <span>{rangeOpened ? "▲" : "▼"}</span>
+        {
+          feed.user == curUser
+          ? (
+            <div className="feed_range">
+              {feed.isPrivate === true ? (
+                <div className="feed_range_selected"
+                  onClick={() => setRangeOpened(!rangeOpened)} >
+                  <img className="feed_range_image" 
+                    src={privateIcon}
+                    alt="private"
+                  />
+                  <span>Private</span>
+                  <span>{rangeOpened ? "▲" : "▼"}</span>
+                </div>
+              ) : (
+                <div className="feed_range_selected"
+                  onClick={() => setRangeOpened(!rangeOpened)} >
+                  <img className="feed_range_image" 
+                    src={publicIcon}
+                    alt="public"
+                  />
+                  <span>Public</span>
+                  <span>{rangeOpened ? "▲" : "▼"}</span>
+                </div>
+              )}
+              {rangeOpened ? (
+                <div className="feed_range_option_list">
+                  <div className="feed_range_option"
+                    onClick={() => rangeChangeHandler(true)} >
+                    <img className="feed_range_image" 
+                      src={privateIcon}
+                      alt="private"
+                    />
+                    <span>Private</span>
+                  </div>
+                  <div className="feed_range_option"
+                    onClick={() => rangeChangeHandler(false)} >
+                    <img className="feed_range_image" 
+                      src={publicIcon}
+                      alt="public"
+                    />
+                    <span>Public</span>
+                  </div>
+                </div>
+              ) : null}
             </div>
-          ) : (
-            <div className="feed_range_selected"
-              onClick={() => setRangeOpened(!rangeOpened)} >
-              <img className="feed_range_image" 
-                src={publicIcon}
-                alt="public"
-              />
-              <span>Public</span>
-              <span>{rangeOpened ? "▲" : "▼"}</span>
-            </div>
-          )}
-          {rangeOpened ? (
-            <div className="feed_range_option_list">
-              <div className="feed_range_option"
-                onClick={() => rangeChangeHandler(true)} >
-                <img className="feed_range_image" 
-                  src={privateIcon}
-                  alt="private"
-                />
-                <span>Private</span>
-              </div>
-              <div className="feed_range_option"
-                onClick={() => rangeChangeHandler(false)} >
-                <img className="feed_range_image" 
-                  src={publicIcon}
-                  alt="public"
-                />
-                <span>Public</span>
-              </div>
-            </div>
-          ) : null}
-        </div>
+          ) : null
+        }
       </div>
       <img className="feed_image" 
         src={feed.image}
