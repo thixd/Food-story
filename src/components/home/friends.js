@@ -48,6 +48,12 @@ const useStyles = makeStyles((theme) => ({
     height: 100,
   },
   textUnderCircle: {
+    paddingTop: 13,
+    display: 'flex',  
+    justifyContent:'center', 
+    alignItems:'center'
+  },
+  textUnderCircleAdd: {
     display: 'flex',  
     justifyContent:'center', 
     alignItems:'center'
@@ -149,7 +155,7 @@ export default function FriendStory(){
                       </Badge>
                   </Button>
                     
-                  <div className = {classes.textUnderCircle}>Your story</div>
+                  <div className = {classes.textUnderCircleAdd}>Your story</div>
                   </Grid>
                   {urls.map((value) => (
                     <Grid key={value} item>

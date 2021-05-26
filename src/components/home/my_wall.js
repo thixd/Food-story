@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   grid: {
     borderRadius: 40,
     paddingTop: 50,
-    paddingBottom: 80,
+    paddingBottom: 130,
     paddingLeft: 50,
     paddingRight: 0,
     display: 'flex',
@@ -48,10 +48,16 @@ const useStyles = makeStyles((theme) => ({
     height: 400,
   },
   textUnderCircle: {
+    paddingTop: 7,
     display: 'flex',  
     justifyContent:'center', 
     alignItems:'center'
   },
+  textUnderCircleAdd: {
+    display: 'flex',  
+    justifyContent:'center', 
+    alignItems:'center'
+  }
 }));
 
 function LinearProgressWithLabel(props) {
@@ -82,11 +88,11 @@ export default function MyWall(){
     firebase.database().ref(uid).on('value', snapshot => {
       const urls_data = Object.keys(snapshot.val()['feeds']).map((key) =>{
           return [snapshot.val()['feeds'][key], key]
-      })
+      }).slice(-14)
       setUrls(urls_data)
     })
   }, [])
-  // console.log(urls[0][0]['image'])
+ 
   useEffect(() => {
       if (file == null) 
         return
@@ -95,7 +101,9 @@ export default function MyWall(){
       const imgref = firebase.storage().ref().child(uid).child('images').child(feedkey)
       var uploadTask = imgref.put(file)
       uploadTask.on('state_changed', function(snapshot){
-        setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        var curProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log(curProgress);
+        setProgress(curProgress);
       }, function(error) {
         alert("Cannot upload!")
       }, function(){
@@ -107,7 +115,7 @@ export default function MyWall(){
         })
         setProgress(0)
         setfile(null)
-        alert("file uploaded")
+        // alert("Image has successfully uploaded!")
       })
   }, [file])
 
@@ -130,22 +138,21 @@ export default function MyWall(){
             <Grid item xs={12}>
               <Grid container justify="left" spacing={7} >
                   <Grid key={0} item style={{}}>
-                    <Button component="label">
+                    <Button component="label" style = {{paddingLeft: 18}}>
                       <input type="file" onChange={handleUploadFile} hidden/>
                       <Avatar style={{ height: '90px', width: '90px', backgroundColor: '#E4C281'}}>
                         <AddAPhotoIcon />
                       </Avatar>
                     </Button>
-                    
-                    <div className = {classes.textUnderCircle} >Add diary</div>
-                    </Grid>
+                    <div className = {classes.textUnderCircleAdd} >Add diary</div>
+                  </Grid>
                   {urls.map((value) => (
                     <Grid key={value} item>
-                        <div>
-                          <Avatar style={{ height: '90px', width: '90px' }} alt="" src= {value[0]['image']} />
+                        <div className= {classes.textUnderCircle}>
+                          <Avatar style={{ height: '90px', width: '90px' }} alt="" src= {value[0]['image']}/>
                         </div>
                         <div className = {classes.textUnderCircle}> {value[0]['createAt']} </div>
-                      </Grid>
+                    </Grid> 
                     ))}
               </Grid>
             </Grid>
