@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function WritePost(){
-  const uid = 'sample uid'
+  const uid = 'Foodie'
   var ava = <img width = {30} height = {30} src = 'https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c'></img>
   const classes = useStyles();
   var date = new Date().toDateString();
@@ -113,7 +113,7 @@ export default function WritePost(){
   function handleSubmit(){
       var info = {
         image: file,
-        text: "",
+        text: value,
         user: uid,
         comments: [{"name": "null", "text": "null"}],
         reaction: [{"0": "null"}],
@@ -125,12 +125,14 @@ export default function WritePost(){
         hashtags: {"0": "null"},
         time: "1min",
     }
+    // console.log(file)
+    // return;
     var feedkey_list = String(firebase.database().ref('Feeds/').push())
     feedkey_list = feedkey_list.split('/')
     var feedKey = feedkey_list[feedkey_list.length -1]
-    firebase.database().ref('Feeds/' + feedKey).child('image').set(info.image)
-    firebase.database().ref('Feeds/' + feedKey).child('text').set(info.text)
-    firebase.database().ref('Feeds/' + feedKey).child('user').set(info.user)
+    firebase.database().ref('Feeds/' + feedKey).child('image').set(getData)
+    firebase.database().ref('Feeds/' + feedKey).child('text').set(value)
+    firebase.database().ref('Feeds/' + feedKey).child('user').set(uid)
     firebase.database().ref('Feeds/' + feedKey).child('comments').set(info.comments)
     firebase.database().ref('Feeds/' + feedKey).child('reaction').set(info.reaction)
     firebase.database().ref('Feeds/' + feedKey).child('isPrivate').set(info.isPrivate)
@@ -138,6 +140,7 @@ export default function WritePost(){
     firebase.database().ref('Feeds/' + feedKey).child('origin').set(info.origin)
     firebase.database().ref('Feeds/' + feedKey).child('lat').set(info.lat)
     firebase.database().ref('Feeds/' + feedKey).child('lng').set(info.lng)
+    firebase.database().ref('Feeds/' + feedKey).child('hashtags').set(info.hashtags)
   }
   console.log(value)
   useEffect(() => {
@@ -157,7 +160,7 @@ export default function WritePost(){
     }, function(){
       var currentdate = new Date();
       firebase.storage().ref().child(uid).child('images').child(feedkey).getDownloadURL().then((value) => {
-        firebase.database().ref('/feeds/'+feedkey+'image').set(value)
+        firebase.database().ref('/feeds/'+feedkey+'/image').set(value)
         firebase.database().ref(uid+'/feeds/'+feedkey+"/image").set(value)
         firebase.database().ref(uid+'/feeds/'+feedkey+"/createAt").set(currentdate.toDateString())
         firebase.database().ref(uid+'/feeds/'+feedkey+"/origin").set("Korea")

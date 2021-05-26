@@ -93,6 +93,7 @@ class RestaurantReview extends Component{
 	render() {
 		if(this.state.getData == false) {
 			this.crawlData();
+			// console.log(this.props)
 		}
 		return (
 			<>
