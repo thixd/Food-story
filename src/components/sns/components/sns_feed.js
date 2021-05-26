@@ -132,7 +132,7 @@ export default function SnsFeed({history, feedId, feedInfo}){
           />
           <div className="feed_info_text">
             <span className="feed_info_author">
-              {author.nickname}
+              {feed.user}
             </span>
             <span className="feed_info_time">
               {feed.time}, {feed.origin} food at {feed.location}

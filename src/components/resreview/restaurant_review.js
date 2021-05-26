@@ -98,8 +98,8 @@ class RestaurantReview extends Component{
 			<>
 				<AppNavBar />
 				<Grid container>
-					<Grid item md = {1} style = {{marginLeft: 30}}>
-						<p style={{ color: '#F47B0A', fontSize: 27,}} >{this.props.location.state.name}</p>
+					<Grid item style = {{marginLeft: 30}}>
+						<p style={{ color: '#F47B0A', fontSize: 27,}} >{"Posts about " + this.props.location.state.name}</p>
 					</Grid>
 				</Grid>
 				{this.state.finalLink}

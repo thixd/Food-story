@@ -29,7 +29,7 @@ export default function SnsNew({history, uid}){
           />
           <div className="feed_info_text">
             <span className="feed_info_author">
-              {author.nickname}
+              {uid}
             </span>
             <span className="feed_info_time">
               now, here
