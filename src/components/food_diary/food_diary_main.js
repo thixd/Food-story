@@ -1,4 +1,4 @@
-import React, {useState, useEffect, createContext, useRef} from 'react'
+import React, {useState, useEffect, createContext, useRef, Component} from 'react'
 import AppNavBar from '../../utils/app_bar'
 import firebase from '../../firebase'
 import AsyncSelect from "react-select/async"
@@ -71,6 +71,8 @@ function Renderer(loc, org, setselectedImage){
     }, [urls])
     useEffect(() => {
         firebase.database().ref(uid).get().then((snapshot) =>{
+            if(typeof(snapshot.val()['feeds']) == "undefined")
+                return;
             const maps = Object.keys(snapshot.val()['feeds']).map((key) =>{
                 return [snapshot.val()['feeds'][key]['image'], key]
             })
@@ -124,7 +126,7 @@ function Renderer(loc, org, setselectedImage){
     return urls.map(map => {
         if (map!=null){
             return (<div>
-                    <img src={map[0]} id={map[1]} className="diary_image" alt="" onClick={imageClick}/>
+                    <img src={map[0]} id={map[1]} style = {{width: '100%', height: '100%'}} className="diary_image" alt="" onClick={imageClick}/>
                 </div>
             )
         }
@@ -134,6 +136,34 @@ function Renderer(loc, org, setselectedImage){
     }) 
 }
 
+var curUser = "testingUser";
+
+class SharingOverlay extends Component {
+    constructor(props){
+        super(props)
+        this.state = {
+            image: this.props.link,
+            user: curUser,
+            comments: [{"name": "null", "text": "null"}],
+            reactions: {"0": "null"},
+            isPrivate: true,
+            location: "Daejon",
+            origin: "Origin",
+            lat: 0,
+            lng: 0,
+            hashtags: {"0": "null"},
+            text: "",
+            time: "1min",
+            getData: false,
+        }
+    }
+    render() {
+        return(
+            <img id="overlay_image" alt=""></img>
+        )
+    }
+
+}
 
 
 function DiaryOverlay(selectedImage){
@@ -143,7 +173,6 @@ function DiaryOverlay(selectedImage){
     const overlayref = useRef(null)
     const mapRef = useRef(null)
     const map = useRef(null)
-
 
     useEffect(() => {
         if (map.current) return
@@ -156,29 +185,28 @@ function DiaryOverlay(selectedImage){
     }, [])
     useEffect(() => {
         if (selectedImage===null) return null
-        firebase.database().ref('/Feeds/'+selectedImage.id).get().then((snapshot) =>{
+        firebase.database().ref(uid + '/feeds/'+selectedImage.id).get().then((snapshot) =>{
             document.querySelector('#overlay_image').src = selectedImage.src 
             document.querySelector('#overlay_location').textContent = snapshot.val()['location']
             document.querySelector('#overlay_origin').textContent = snapshot.val()['origin']
-            //map.current.setCenter([snapshot.val()['lng'], snapshot.val()['lat']])
+            // map.current.setCenter([90, 90])
         })
     }, [selectedImage])
 
     const history = useHistory()
     function share(){
         //do_something
-        var prop = {'BoxProps': {'val': {image:document.getElementById('overlay_image').src, 'user': uid},
-                'feedkey': selectedImage.id
-        }}
+        var prop = {'src': selectedImage.src, 'user': uid}
 
         history.push({
-            pathname:'/single_post'
+            pathname:'/sharing-post',
+            state: {src: selectedImage.src, name: uid}
         })
     }
     return (
         <div id="diary_overlay" style={{display:"none"}} ref={overlayref}>
             <IconButton id="overlay_share" component="span" onClick={share}>
-                <ShareIcon style={{fontSize:"30"}}/>
+                <p>Share</p>
             </IconButton>
             <img id="overlay_image" alt=""></img>
 
@@ -205,8 +233,12 @@ function Upload_file(){
             alert("file uploaded")
         }).then(() => {
             firebase.storage().ref().child(uid).child('images').child(feedkey).getDownloadURL().then((value) =>{
-                firebase.database().ref('/Feeds/'+feedkey+'image').set(value)
-                firebase.database().ref(uid+'/Feeds/'+feedkey+"/image").set(value)
+                // firebase.database().ref('/Feeds/'+feedkey+'/image').set(value)
+                firebase.database().ref(uid+'/feeds/'+feedkey+"/image").set(value)
+                // firebase.database().ref('/Feeds/'+feedkey+'/origin').set("Korea")
+                firebase.database().ref(uid+'/feeds/'+feedkey+"/origin").set("Korea")
+                // firebase.database().ref('/Feeds/'+feedkey+'/location').set("Daejon")
+                firebase.database().ref(uid+'/feeds/'+feedkey+"/location").set("Daejon")
             })
         })
     }, [file])
@@ -261,6 +293,7 @@ export default function DiaryMain(){
                     </div>
                 </div>
                 {DiaryOverlay(selectedImage)}
+                {/* <SharingOverlay/> */}
             </div>
         </SelectionContext.Provider>
     )

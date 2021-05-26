@@ -19,13 +19,16 @@ export default function SnsMain({history}){
             setFeeds(snapshot.val());
         });
     }, []);
+    var Key = Object.keys(feeds), Val = Object.values(feeds);
+    Key.reverse()
+    Val.reverse()
 
     return (
         <>
             <AppNavBar/>
             <div className="sns_main">
                 <SnsNew uid={uid} history={history} />
-                {Object.keys(feeds).map((feedId) => 
+                {Key.map((feedId) => 
                     <SnsFeed feedId={feedId} feedInfo={feeds[feedId]} history={history} />
                 )}
             </div>

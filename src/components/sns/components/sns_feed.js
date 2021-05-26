@@ -1,6 +1,27 @@
 import React, { useState, useEffect } from "react";
 import "./sns_feed.css";
 import firebase from "../../../firebase";
+import { useHistory, withRouter } from 'react-router-dom';
+
+const hashTag = {
+	color: "blue",
+	textDecoration: "underline",
+}
+
+function HashTags(props) {
+	let history = useHistory();
+	function movetoResReview() {
+		history.push({
+			pathname: "/restaurant-review",
+			state: props
+		})
+	}
+	return(
+		<div onClick = {movetoResReview}><a style = {hashTag}>{"#" + props.name}</a></div>
+	)
+}
+
+
 
 export default function SnsFeed({history, feedId, feedInfo}){
   // Whether range dropdown is opened
@@ -22,10 +43,10 @@ export default function SnsFeed({history, feedId, feedInfo}){
     isPrivate: true
   }, feedInfo));
   const [author, setAuthor] = useState({
-    profile: "https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c",
+    profile: 'https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c',
     nickname: "author"
   });
-
+  // console.log("this", author)
   // Snapshot setting
   useEffect(() => {
     firebase.database().ref("Feeds/" + feedId).on("value", (snapshot) => {
@@ -38,6 +59,8 @@ export default function SnsFeed({history, feedId, feedInfo}){
     firebase.database().ref(feed.user).get().then((snapshot) => {
       if(snapshot.exists()) {
         var authorVal = snapshot.val();
+        console.log(authorVal.profile, authorVal.nickname);
+        // setAuthor.setState({profile: authorVal.profile, nickname: authorVal.nickname})
         setAuthor(aut => Object.assign({}, aut, { 
           profile: authorVal.profile, 
           nickname: authorVal.nickname 
@@ -76,17 +99,6 @@ export default function SnsFeed({history, feedId, feedInfo}){
       firebase.database().ref("Feeds/" + feedId + "/reaction").push(author.nickname);
     }
   }
-
-  // hashtag handler
-  function hashtagHandler(hashtag) {
-    history.push({
-			pathname: "/restaurant-review",
-			state: {
-        name: hashtag
-      }
-		});
-  }
-
   // comments handler
   function commentsHandler() {
     history.push({
@@ -105,7 +117,11 @@ export default function SnsFeed({history, feedId, feedInfo}){
   const publicIcon = "https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fpublic_icon.png?alt=media&token=4eb66ae0-36b3-4708-a42e-cad5ed2b32d8";
   const likeIcon = "https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Flike_icon.png?alt=media&token=9bfe50a4-9d15-4be4-bbca-6a13f920f8af";
   const commentIcon = "https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fcomment_icon.png?alt=media&token=d47b813b-60c8-4fc2-8e16-aa2798f39fb4";
-
+  // var hashTag = feed.hashtags
+  var hashTag = Object.values(feed.hashtags)
+  hashTag.reverse()
+  hashTag.pop()
+  hashTag.reverse()
   return (
     <div className="feed">
       <div className="feed_header">
@@ -171,14 +187,6 @@ export default function SnsFeed({history, feedId, feedInfo}){
         src={feed.image}
         alt="feed"
       />
-      <span className="feed_hashtags">
-        { feed.hashtags.map((ht) => 
-          <span className="feed_hashtag" 
-            onClick={() => hashtagHandler(ht)}>
-            #{ht}
-          </span>
-        ) }
-      </span>
       <span className="feed_text">
         {feed.text}
       </span>
@@ -199,8 +207,13 @@ export default function SnsFeed({history, feedId, feedInfo}){
             alt="comment"
           />
         </div>
+        
       </div>
-      
+      <span className="feed_hashtags" style = {{marginTop: 0}}>
+        { hashTag.map((hashtag) => 
+          <HashTags name = {hashtag}/>
+        ) }
+      </span>
     </div>
   );
 }

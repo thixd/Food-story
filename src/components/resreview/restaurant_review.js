@@ -1,8 +1,8 @@
 import React, {useState, useEffect, Component} from 'react';
 import Grid from '@material-ui/core/Grid';
-import SingleBox from './single_box.js';
 import AppNavBar from '../../utils/app_bar'
 import firebase from '../../firebase'
+import SingleBox from './single_box.js';
 import { useLocation, withRouter } from 'react-router-dom';
 /* --------------------------------------- Style ----------------------------------------*/
 const singleRow = {
@@ -44,6 +44,7 @@ class RestaurantReview extends Component{
 				var ok = 0
 				var HashTags = childSnapShot.val().hashtags
 				console.log(HashTags); 
+				HashTags = Object.values(HashTags)
 				for(var i = 0; i < HashTags.length; i++){
 					if(HashTags[i] == resrev.props.location.state.name)
 					   ok = 1;
