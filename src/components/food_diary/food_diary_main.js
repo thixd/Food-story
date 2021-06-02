@@ -142,7 +142,7 @@ function Renderer(loc, org, setselectedImage){
         if (map!=null){
             return (
                 <div >
-                    <div style = {{display: 'flex', justifyContent:'center', alignItems:'center', paddingBottom: 5}}> 
+                    <div style = {{display: 'flex', justifyContent:'center', alignItems:'center', paddingBottom: 5, cursor: "pointer" }}> 
                         <img src={map[0]['image']} id={map[1]} style = {{width: 90, height: 90}} className="diary_image" alt="" onClick={imageClick}/>
                     </div>
                     <div style = {{display: 'flex', justifyContent:'center', alignItems:'center'}}> {map[0]['createAt']} </div>
