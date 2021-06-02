@@ -92,13 +92,20 @@ export default function FriendStory(){
   const uid = "sample_uid"
   // const { currentUser } = useAuth();
   // const uid = currentUser.uid;
-  useState(() => {
-    firebase.database().ref(uid).get().then((snapshot => {
-      const urls_data = snapshot.val()['friends']
-      setUrls(urls_data)
-    }))
-  }, [])
 
+  // useState(() => {
+  //   firebase.database().ref(uid).once('value').then((snapshot => {
+  //     const urls_data = snapshot.val()['friends']
+  //     setUrls(urls_data)
+  //   }))
+  // }, [])
+  useEffect(() => {
+    firebase.database().ref(uid).on('value', snapshot => {
+      var urls_data = snapshot.val()['friends'];
+      setUrls(urls_data)
+    })
+  }, [])
+  console.log(urls)
   useEffect(() => {
       if (file == null) 
         return
@@ -160,7 +167,7 @@ export default function FriendStory(){
                   <div className = {classes.textUnderCircleAdd}>Share your story</div>
                   </Grid>
                   {urls.map((value) => (
-                    <Grid key={value} item>
+                    <Grid key={Math.random()} item>
                         <div>
                           <Avatar style={{ height: '90px', width: '90px' }} alt="" src= {value['image']} />
                         </div>
