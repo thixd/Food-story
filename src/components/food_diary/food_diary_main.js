@@ -142,7 +142,7 @@ function Renderer(loc, org, setselectedImage){
         if (map!=null){
             return (
                 <div >
-                    <div style = {{display: 'flex', justifyContent:'center', alignItems:'center', paddingBottom: 5}}> 
+                    <div style = {{display: 'flex', justifyContent:'center', alignItems:'center', paddingBottom: 5, cursor: "pointer" }}> 
                         <img src={map[0]['image']} id={map[1]} style = {{width: 90, height: 90}} className="diary_image" alt="" onClick={imageClick}/>
                     </div>
                     <div style = {{display: 'flex', justifyContent:'center', alignItems:'center'}}> {map[0]['createAt']} </div>
@@ -167,13 +167,15 @@ var curUser = "testingUser";
 
 
 function DiaryOverlay(selectedImage){
+    /*
     const [lng, setlng] = useState(127.36252)
     const [lat, setlat] = useState(36.37036)
     const [zoom, setzoom] = useState(12)
+    */
     const overlayref = useRef(null)
     const mapRef = useRef(null)
     const map = useRef(null)
-
+    /*
     useEffect(() => {
         if (map.current) return
         map.current = new mapboxgl.Map({
@@ -183,6 +185,7 @@ function DiaryOverlay(selectedImage){
             zoom: zoom
         })
     }, [])
+    */
     useEffect(() => {
         if (selectedImage===null) return null
         firebase.database().ref(uid + '/feeds/'+selectedImage.id).get().then((snapshot) =>{
@@ -213,7 +216,7 @@ function DiaryOverlay(selectedImage){
             <div id="overlay_location" style={{paddingRight:"50px", justifySelf:"right"}}></div>
             <div style={{paddingLeft:"50px", justifySelf:"left"}}>Origin</div>
             <div id="overlay_origin" style={{paddingRight:"50px", justifySelf:"right"}}></div>
-            <div ref={mapRef} className="map"></div>
+            <img className="map" src="https://i.imgur.com/QmtGVjN.png"></img>
 
         </div>
     )
