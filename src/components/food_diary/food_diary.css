@@ -28,6 +28,7 @@
     border-radius: 50%;
     object-fit: cover;
     box-shadow: 0px 2px 2px grey;
+    cursor: pointer;
 
 }
 .diary_fill{
