@@ -38,13 +38,13 @@ export default function SnsFeed({history, feedId, feedInfo}){
     origin: "", 
     reaction: [], 
     text: "", 
-    user: "sample_uid", 
+    user: "Foodie", 
     time: "1min", 
     isPrivate: true
   }, feedInfo));
   const [author, setAuthor] = useState({
     profile: 'https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c',
-    nickname: "sample_uid"
+    nickname: "Foodie"
   });
   // console.log("this", author)
   // Snapshot setting
@@ -126,7 +126,7 @@ export default function SnsFeed({history, feedId, feedInfo}){
       <div className="feed_header">
         <div className="feed_info">
           <img className="feed_info_image" 
-            src={author.profile}
+            src={"https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c"}
             alt="profile"
           />
           <div className="feed_info_text">

@@ -94,25 +94,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function WritePost(){
+export default function WritePost(props){
+  console.log(props.location.state.src);
   const uid = 'Foodie'
   var ava = <img width = {30} height = {30} src = 'https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c'></img>
   const classes = useStyles();
   var date = new Date().toDateString();
   const [value, setValue] = useState('')
-  const [file, setfile] = useState(null)
+  const [file, setfile] = useState(null);
   const [progress, setProgress] = useState(0)
   const [getData, setGetData] = useState(null)
   const onRTEChange = event => {
     const plainText = event.getCurrentContent().getPlainText()
     setValue(plainText) // store your rteContent to state
   }
+  var history = useHistory();
   var url = null;
-  var white_plate = "https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2F41743.jpg?alt=media&token=a149adac-57e7-4a82-afa4-19af9ffa65f6"
+  var white_plate = props.location.state.src == null ? "https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2F41743.jpg?alt=media&token=a149adac-57e7-4a82-afa4-19af9ffa65f6" : props.location.state.src;
 
   function handleSubmit(){
       var info = {
-        image: file,
+        image: props.location.state.src == null ? file : props.location.state.src ,
         text: value,
         user: uid,
         comments: [{"name": "null", "text": "null"}],
@@ -125,12 +127,26 @@ export default function WritePost(){
         hashtags: {"0": "null"},
         time: "1min",
     }
-    // console.log(file)
-    // return;
+    var newHashTags = ["null"];
+    for(var i = 0; i < info.text.length; i++) {
+      if(info.text[i] == "#"){
+        i++;
+        var singleHashTag = "";
+        while(true){
+          if(info.text[i] == " " || info.text[i] == "#" || i == info.text.length){
+              break;
+          }
+          singleHashTag += info.text[i];
+          i++
+        }
+        i--;
+        newHashTags.push(singleHashTag);
+      }
+    }
     var feedkey_list = String(firebase.database().ref('Feeds/').push())
     feedkey_list = feedkey_list.split('/')
     var feedKey = feedkey_list[feedkey_list.length -1]
-    firebase.database().ref('Feeds/' + feedKey).child('image').set(getData)
+    firebase.database().ref('Feeds/' + feedKey).child('image').set(info.image)
     firebase.database().ref('Feeds/' + feedKey).child('text').set(value)
     firebase.database().ref('Feeds/' + feedKey).child('user').set(uid)
     firebase.database().ref('Feeds/' + feedKey).child('comments').set(info.comments)
@@ -140,7 +156,8 @@ export default function WritePost(){
     firebase.database().ref('Feeds/' + feedKey).child('origin').set(info.origin)
     firebase.database().ref('Feeds/' + feedKey).child('lat').set(info.lat)
     firebase.database().ref('Feeds/' + feedKey).child('lng').set(info.lng)
-    firebase.database().ref('Feeds/' + feedKey).child('hashtags').set(info.hashtags)
+    firebase.database().ref('Feeds/' + feedKey).child('hashtags').set(newHashTags)
+    history.push("/sns");
   }
   console.log(value)
   useEffect(() => {

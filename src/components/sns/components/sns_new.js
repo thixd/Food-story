@@ -16,7 +16,10 @@ export default function SnsNew({uid}){
 
   // share handler
   function shareHandler() {
-    history.push("/writepost")
+    history.push(
+      {pathname:'/writepost',
+      state: {src: null},}
+    )
   }
 
   return (
