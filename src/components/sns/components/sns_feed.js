@@ -17,7 +17,7 @@ function HashTags(props) {
 		})
 	}
 	return(
-		<div onClick = {movetoResReview}><a style = {hashTag}>{"#" + props.name}</a></div>
+		<div className="feed_hashtag" onClick = {movetoResReview}><a style = {hashTag}>{"#" + props.name}</a></div>
 	)
 }
 
@@ -56,6 +56,8 @@ export default function SnsFeed({history, feedId, feedInfo}){
 
   // Load user data
   useEffect(() => {
+    console.log("user name")
+    console.log(feed.user);
     firebase.database().ref(feed.user).get().then((snapshot) => {
       if(snapshot.exists()) {
         var authorVal = snapshot.val();
@@ -71,7 +73,7 @@ export default function SnsFeed({history, feedId, feedInfo}){
     }).catch((error) => {
       console.error(error);
     });
-    console.log(feed);
+    //console.log(feed);
   }, [feed ]);
 
   // range handler
@@ -191,9 +193,6 @@ export default function SnsFeed({history, feedId, feedInfo}){
         src={feed.image}
         alt="feed"
       />
-      <span className="feed_text">
-        {feed.text}
-      </span>
       <div className="feed_reaction">
         <div className={Object.values(feed.reaction).find((v) => v === author.nickname) ? "feed_reaction_like_enabled" : "feed_reaction_like_disabled"}
           onClick={() => reactionHandler()}>
@@ -211,11 +210,13 @@ export default function SnsFeed({history, feedId, feedInfo}){
             alt="comment"
           />
         </div>
-        
       </div>
+      <span className="feed_text">
+        {feed.text}
+      </span>
       <span className="feed_hashtags" style = {{marginTop: 0}}>
         { hashTag.map((hashtag) => 
-          <HashTags name = {hashtag}/>
+          <HashTags key = { hashtag } name = {hashtag}/>
         ) }
       </span>
     </div>

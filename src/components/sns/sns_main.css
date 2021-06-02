@@ -5,3 +5,33 @@
   align-items: center;
   width: 100%;
 }
+
+.sns_main .sns_scroll_to_top_enabled {
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  bottom: 30px;
+  right: 30px;
+  background-color: #F47B0A;
+  padding: 10px 10px 10px 10px;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+}
+.sns_main .sns_scroll_to_top_enabled:hover {
+  cursor: pointer;
+}
+.sns_main .sns_scroll_to_top_enabled .sns_arrow_up_icon {
+  width: 25px;
+  height: 25px;
+  margin: 0px 5px 0px 0px;
+}
+.sns_main .sns_scroll_to_top {
+  display: none;
+}
+
+.sns_main .sns_scroll_to_top_disabled {
+  display: none;
+}

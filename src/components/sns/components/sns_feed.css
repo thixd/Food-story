@@ -33,11 +33,11 @@
   flex-direction: column;
 }
 .feed .feed_header .feed_info .feed_info_text .feed_info_author {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
 }
 .feed .feed_header .feed_info .feed_info_text .feed_info_time {
-  font-size: 18px;
+  font-size: 20px;
 }
 .feed .feed_header .feed_range {
   position: relative;
@@ -84,11 +84,11 @@
   margin: 0px 5px 0px 0px;
 }
 .feed .feed_header .feed_range_selected span {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
 }
 .feed .feed_header .feed_range_option_list .feed_range_option span {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
 }
 
@@ -103,11 +103,11 @@
   margin: 15px 0px 0px 0px;
 }
 .feed .feed_hashtags .feed_hashtag {
-  font-size: 18px;
+  font-size: 20px;
   /*font-weight: bold;*/
   color: blue;
 	text-decoration: underline;
-  margin: 0px 5px 0px 5px;
+  margin: 0px 10px 0px 0px;
 }
 .feed .feed_hashtags .feed_hashtag:hover {
   cursor: pointer;
@@ -115,7 +115,7 @@
 
 /* Feed Text */
 .feed .feed_text {
-  font-size: 18px;
+  font-size: 20px;
   word-break: break-word;
 }
 
@@ -145,12 +145,12 @@
   cursor: pointer;
 }
 .feed .feed_reaction div .feed_reaction_like {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
 }
 .feed .feed_reaction div .feed_reaction_like_image {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   padding-right: 15px;
 }
 .feed .feed_reaction .feed_reaction_comment_container {
@@ -162,12 +162,12 @@
   cursor: pointer;
 }
 .feed .feed_reaction .feed_reaction_comment_container .feed_reaction_comment {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
 }
 .feed .feed_reaction .feed_reaction_comment_container .feed_reaction_comment_image {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
 }
 
 /* Feed Comments */
