@@ -32,7 +32,7 @@ export default function SnsNew({uid}){
           />
           <div className="feed_info_text">
             <span className="feed_info_author">
-              {uid}
+              Foodie
             </span>
             <span className="feed_info_time">
               now, here

@@ -265,11 +265,11 @@ class SinglePostView extends Component{
 									 <div>{this.state.time + ", " + this.state.location}</div>
 								</Grid>
 								<Grid item> <div>{localState.reaction.length - 1}</div></Grid>
-								<Grid item md = {1} style = {{marginLeft: 10}}> <div  onClick = {this.updateReaction}>
+								<Grid item md = {1} style = {{marginLeft: 10, cursor: "pointer" }}> <div  onClick = {this.updateReaction}>
 									{localState.reacted == 1 ? liked : unliked}
 								</div></Grid>
 								<Grid item> <div>{localState.comments.length}</div> </Grid>
-								<Grid item md = {1} style = {{marginLeft: 10}}> <div>{icnComment}</div> </Grid>
+								<Grid item md = {1} style = {{marginLeft: 10,  cursor: "pointer" }}> <div>{icnComment}</div> </Grid>
 							</Grid>
 						</Grid>
 						<hr/>

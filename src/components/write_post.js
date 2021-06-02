@@ -114,7 +114,7 @@ export default function WritePost(props){
 
   function handleSubmit(){
       var info = {
-        image: props.location.state.src == null ? file : props.location.state.src ,
+        image: props.location.state.src == null ? getData : props.location.state.src ,
         text: value,
         user: uid,
         comments: [{"name": "null", "text": "null"}],
