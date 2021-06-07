@@ -123,6 +123,7 @@ class SinglePostView extends Component{
 		console.log(this.props)
 		this.state = {
 			BoxProps: this.props.location.state.BoxProps,
+			profile: '',
 			getData: false,
 			reaction: [],
 			comments: [],
@@ -133,6 +134,20 @@ class SinglePostView extends Component{
 			location: "",
 		}
 	}
+
+	componentDidMount() {
+		firebase.database().ref(this.state.BoxProps.val.user).get().then((snapshot) => {
+      if(snapshot.exists()) {
+        var authorVal = snapshot.val();
+        this.setState({profile: authorVal.profile});
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+	}
+
 	crawlData = () => {
 		var post = this;
 		firebase.database().ref("Feeds/" + post.state.BoxProps.feedKey).once('value').then((snapshot) => {
@@ -259,7 +274,7 @@ class SinglePostView extends Component{
 						{/*Displayign user ID, reaction count, comment count*/}
 						<Grid container style = {displayUser}>
 							<Grid container style = {infoUser}>
-								<Grid item md = {1}> <div>{ava}</div></Grid>
+								<Grid item md = {1}> <div><img width = {30} height = {30} src = {localState.profile}></img></div></Grid>
 								<Grid item md = {8}>
 									 <div><p style = {{margin: 0, fontWeight: "bold", fontSize: 18}}>{localState.BoxProps.val.user}</p></div> 
 									 <div>{this.state.time + ", " + this.state.location}</div>

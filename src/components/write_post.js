@@ -96,8 +96,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function WritePost(props){
   console.log(props.location.state.src);
-  const uid = 'Foodie'
-  var ava = <img width = {30} height = {30} src = 'https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c'></img>
+  const uid = 'sample_uid'
+  var ava = <img width = {30} height = {30} src = "https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/sample_uid%2Fimages%2Fprofile_w3.jpg?alt=media&token=c15b4344-d4ad-4e0f-bf94-a76ef0f740de"></img>
   const classes = useStyles();
   var date = new Date().toDateString();
   const [value, setValue] = useState('')
@@ -125,7 +125,7 @@ export default function WritePost(props){
         lat: 0,
         lng: 0,
         hashtags: {"0": "null"},
-        time: "1min",
+        time: date,
     }
     var newHashTags = ["null"];
     for(var i = 0; i < info.text.length; i++) {
@@ -157,6 +157,7 @@ export default function WritePost(props){
     firebase.database().ref('Feeds/' + feedKey).child('lat').set(info.lat)
     firebase.database().ref('Feeds/' + feedKey).child('lng').set(info.lng)
     firebase.database().ref('Feeds/' + feedKey).child('hashtags').set(newHashTags)
+    firebase.database().ref('Feeds/' + feedKey).child('time').set(info.time)
     history.push("/sns");
   }
   console.log(value)
@@ -225,7 +226,7 @@ const handleUploadFile = (e) => {
                   <Grid container className={classes.infoUser}>
                     <Grid item md = {1}> <div>{ava}</div></Grid>
                     <Grid item md = {8}>
-                      <div><p style = {{margin: 0, fontWeight: "bold", fontSize: 18}}>Foodie</p></div> 
+                      <div><p style = {{margin: 0, fontWeight: "bold", fontSize: 18}}>{uid}</p></div> 
                       <div>{ date}, Daejeon</div>
                     </Grid>
                   </Grid>

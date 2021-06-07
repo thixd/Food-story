@@ -50,7 +50,7 @@ export default function SnsMain({history}){
             <div className="sns_main">
                 <SnsNew uid={uid} history={history} />
                 {Key.map((feedId) => 
-                    <SnsFeed key={feedId} feedId={feedId} feedInfo={feeds[feedId]} history={history} />
+                    <SnsFeed key={feedId} uid={uid} feedId={feedId} feedInfo={feeds[feedId]} history={history} />
                 )}
                 <label className={showScrollToTop ? "sns_scroll_to_top_enabled" : "sns_scroll_to_top_disabled"}
                     for="sns_scroll_to_top" >

@@ -30,11 +30,26 @@ var ava;
 ava = <img width = {30} height = {30} src = 'https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c'></img>
 
 function SingleComment(props) {
+    const [profile, setProfile] = useState('https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c');
+
+    useEffect(() => {
+        firebase.database().ref(props.name).get().then((snapshot) => {
+            if(snapshot.exists()) {
+                var authorVal = snapshot.val();
+                setProfile(authorVal.profile);
+            } else {
+                console.log("No data available");
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+    }, []);
+
     return(
         <Grid container style = {displayText}>
             {/* {localState.comments} */}
             <div style = {singleComment}>
-                <Grid container><p>{ava}</p><p style = {{marginLeft: 10, fontWeight: "bold", fontSize: 16}}>{props.name}</p></Grid>
+                <Grid container><p><img width = {30} height = {30} src = {profile}></img></p><p style = {{marginLeft: 10, fontWeight: "bold", fontSize: 16}}>{props.name}</p></Grid>
                 <Grid container >
                     <Grid items md = {12} style = {{overflowWrap: 'break-word',}}>
                         <p style = {{margin: 0}}>{props.text}</p>

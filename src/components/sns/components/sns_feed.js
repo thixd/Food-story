@@ -43,8 +43,7 @@ export default function SnsFeed({history, feedId, feedInfo}){
     isPrivate: true
   }, feedInfo));
   const [author, setAuthor] = useState({
-    profile: 'https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c',
-    nickname: "Foodie"
+    profile: 'https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c'
   });
   // console.log("this", author)
   // Snapshot setting
@@ -61,11 +60,9 @@ export default function SnsFeed({history, feedId, feedInfo}){
     firebase.database().ref(feed.user).get().then((snapshot) => {
       if(snapshot.exists()) {
         var authorVal = snapshot.val();
-        console.log(authorVal.profile, authorVal.nickname);
-        // setAuthor.setState({profile: authorVal.profile, nickname: authorVal.nickname})
+        console.log(authorVal.profile);
         setAuthor(aut => Object.assign({}, aut, { 
-          profile: authorVal.profile, 
-          nickname: authorVal.nickname 
+          profile: authorVal.profile
         }));
       } else {
         console.log("No data available");
@@ -92,13 +89,13 @@ export default function SnsFeed({history, feedId, feedInfo}){
   // reaction handler
   function reactionHandler() {
     // add if not reacted, and remove if reacted
-    var reactionKey = Object.keys(feed.reaction).find((r) => feed.reaction[r] === author.nickname);
+    var reactionKey = Object.keys(feed.reaction).find((r) => feed.reaction[r] === curUser);
     if(reactionKey !== undefined) {
       // remove
       firebase.database().ref("Feeds/" + feedId + "/reaction/" + reactionKey).remove();
     } else {
       // add
-      firebase.database().ref("Feeds/" + feedId + "/reaction").push(author.nickname);
+      firebase.database().ref("Feeds/" + feedId + "/reaction").push(curUser);
     }
   }
   // comments handler
@@ -129,7 +126,7 @@ export default function SnsFeed({history, feedId, feedInfo}){
         <div className="feed_info"
           onClick={() => commentsHandler()}>
           <img className="feed_info_image" 
-            src={"https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c"}
+            src={author.profile}
             alt="profile"
           />
           <div className="feed_info_text">
@@ -196,7 +193,7 @@ export default function SnsFeed({history, feedId, feedInfo}){
         onClick={() => commentsHandler()}
       />
       <div className="feed_reaction">
-        <div className={Object.values(feed.reaction).find((v) => v === author.nickname) ? "feed_reaction_like_enabled" : "feed_reaction_like_disabled"}
+        <div className={Object.values(feed.reaction).find((v) => v === curUser) ? "feed_reaction_like_enabled" : "feed_reaction_like_disabled"}
           onClick={() => reactionHandler()}>
           <span className="feed_reaction_like">{Object.keys(feed.reaction).length - 1}</span>
           <img className="feed_reaction_like_image" 
