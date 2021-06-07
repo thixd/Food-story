@@ -23,6 +23,9 @@
   flex-direction: row;
   align-items: center;
 }
+.feed .feed_header .feed_info:hover {
+  cursor: pointer;
+}
 .feed .feed_header .feed_info .feed_info_image {
   width: 50px;
   height: 50px;
@@ -93,7 +96,8 @@
 }
 
 /* Feed Image */
-.feed .feed_image {
+.feed .feed_image:hover {
+  cursor: pointer;
 }
 
 /* Feed Hashtags */
@@ -117,6 +121,9 @@
 .feed .feed_text {
   font-size: 20px;
   word-break: break-word;
+}
+.feed .feed_text:hover {
+  cursor: pointer;
 }
 
 /* Feed Reaction */

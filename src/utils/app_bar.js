@@ -59,12 +59,6 @@ export default function AppNavBar() {
             </Typography>
           </Link>
 
-          <Link to="/" style={{ textDecoration: 'none'}}>
-            <IconButton> 
-              <Avatar alt="Foodie" src="https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c" />
-            </IconButton>
-          </Link>
-
         </Toolbar>
       </AppBar>
     </div>

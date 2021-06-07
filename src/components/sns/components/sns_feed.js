@@ -126,7 +126,8 @@ export default function SnsFeed({history, feedId, feedInfo}){
   return (
     <div className="feed">
       <div className="feed_header">
-        <div className="feed_info">
+        <div className="feed_info"
+          onClick={() => commentsHandler()}>
           <img className="feed_info_image" 
             src={"https://firebasestorage.googleapis.com/v0/b/foodstory-c6226.appspot.com/o/static%2Fdefault_profile.jpg?alt=media&token=723ea738-6941-41c1-8a1d-4f26b1dbb88c"}
             alt="profile"
@@ -192,6 +193,7 @@ export default function SnsFeed({history, feedId, feedInfo}){
       <img className="feed_image" 
         src={feed.image}
         alt="feed"
+        onClick={() => commentsHandler()}
       />
       <div className="feed_reaction">
         <div className={Object.values(feed.reaction).find((v) => v === author.nickname) ? "feed_reaction_like_enabled" : "feed_reaction_like_disabled"}
@@ -211,7 +213,8 @@ export default function SnsFeed({history, feedId, feedInfo}){
           />
         </div>
       </div>
-      <span className="feed_text">
+      <span className="feed_text"
+        onClick={() => commentsHandler()}>
         {feed.text}
       </span>
       <span className="feed_hashtags" style = {{marginTop: 0}}>
