@@ -13,6 +13,9 @@ https://localhost:3000
 Also, you can find our deployed web service demo at 
 https://foodstory-c6226.firebaseapp.com/
 
+Main of app in src/App.js
+Other elements can be found in src/components
+
 Demo
 ===
 Foodstory includes 2 majors part: private diary and public social media for food <br/>
